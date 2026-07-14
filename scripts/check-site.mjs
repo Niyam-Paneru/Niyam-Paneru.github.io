@@ -1,7 +1,8 @@
 import { readFileSync, readdirSync, statSync } from "node:fs";
 import { dirname, extname, join, normalize, relative, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
 
-const root = resolve(import.meta.dirname, "..");
+const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const ignoredDirectories = new Set([".git", "node_modules"]);
 
 function walk(directory) {
@@ -62,10 +63,24 @@ for (const file of htmlFiles) {
   if (rel.startsWith("sample-") && (content.match(/Synthetic demonstration/gi) ?? []).length < 3) {
     failures.push(`${rel}: synthetic label is not repeated enough`);
   }
+}
 
-  if (/sk_live_|api[_-]?key\s*=|BEGIN (?:RSA |OPENSSH )?PRIVATE KEY/i.test(content)) {
-    failures.push(`${rel}: possible credential material`);
-  }
+const textExtensions = new Set([".css", ".html", ".js", ".json", ".jsonc", ".md", ".mjs", ".svg", ".txt", ".yaml", ".yml"]);
+const possibleCredential = new RegExp(
+  [
+    "s[k]_live_",
+    "(?:gh[pousr]|github_pat)_[A-Za-z0-9_]{20,}",
+    "(?:AKIA|ASIA)[A-Z0-9]{16}",
+    "-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----",
+    "(?:api[_-]?key|client[_-]?secret|password|access[_-]?token)\\s*[:=]\\s*[\\\"'][^\\\"']{8,}[\\\"']",
+  ].join("|"),
+  "i",
+);
+
+for (const file of files.filter((candidate) => textExtensions.has(extname(candidate)))) {
+  const rel = relative(root, file);
+  const content = readFileSync(file, "utf8");
+  if (possibleCredential.test(content)) failures.push(`${rel}: possible credential material`);
 }
 
 if (!htmlFiles.length) failures.push("No HTML files found");

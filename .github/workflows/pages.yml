@@ -23,6 +23,12 @@ jobs:
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Validate site
+        run: |
+          node scripts/check-site.mjs
+          node --check assets/script.js
       - name: Configure Pages
         uses: actions/configure-pages@v5
       - name: Upload static site
