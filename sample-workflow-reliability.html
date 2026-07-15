@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Synthetic AI Workflow Reliability Report | Niyam Paneru</title>
+    <meta name="description" content="Synthetic demonstration of a technically realistic webhook and CRM workflow reliability report, including idempotency, retry, recovery and handoff evidence.">
+    <meta name="author" content="Niyam Paneru">
+    <meta name="theme-color" content="#101b2d">
+    <link rel="canonical" href="https://niyam-paneru.github.io/sample-workflow-reliability.html">
+    <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="assets/styles.css">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="AI Workflow Reliability Report — Synthetic Demonstration">
+    <meta property="og:description" content="A fictional but technically realistic reliability repair report with five evidence-led tests.">
+    <meta property="og:image" content="https://niyam-paneru.github.io/assets/social-preview.png">
+    <meta property="og:image:type" content="image/png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Niyam Paneru — Reproduce it. Repair it. Prove the fix.">
+    <meta name="twitter:card" content="summary_large_image">
+    <script src="assets/script.js" defer></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to main content</a>
+    <header class="site-header">
+      <div class="nav-wrap">
+        <a class="brand" href="index.html" aria-label="Niyam Paneru home"><span class="brand-mark" aria-hidden="true">NP</span><span>Niyam Paneru</span></a>
+        <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-navigation" data-nav-toggle>Menu</button>
+        <nav class="site-nav" id="site-navigation" aria-label="Primary navigation" data-navigation>
+          <ul><li><a href="index.html#services">Services</a></li><li><a href="case-study-dentsignal.html">Engineering proof</a></li><li><a href="index.html#process">Process</a></li><li><a href="voice-agent-qa.html">Voice QA</a></li><li><a href="index.html#contact">Contact</a></li></ul>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main">
+      <header class="page-hero">
+        <div class="container narrow">
+          <nav class="breadcrumbs" aria-label="Breadcrumb"><a href="index.html">Home</a> / Sample deliverables / Workflow reliability</nav>
+          <span class="status">Synthetic demonstration</span>
+          <p class="eyebrow">Sample deliverable · not client work</p>
+          <h1>AI Workflow Reliability Report — Synthetic Demonstration</h1>
+          <p class="lede">A fictional incident and repair for Copper Finch Software, created solely to show the structure and technical depth of a reliability-sprint handoff.</p>
+          <dl class="meta-grid">
+            <div><dt>Company</dt><dd>Copper Finch Software (fictional)</dd></div>
+            <div><dt>Workflow</dt><dd>Subscription webhook → CRM handoff</dd></div>
+            <div><dt>Report type</dt><dd>Synthetic demonstration</dd></div>
+          </dl>
+          <div class="actions"><a class="button button-secondary" href="samples/ai-workflow-reliability-report.md">View Markdown source</a></div>
+        </div>
+      </header>
+
+      <section class="section">
+        <div class="container narrow stack">
+          <div class="callout"><p><strong>Synthetic demonstration:</strong> Copper Finch Software, its systems, event IDs, timings and evidence are fictional. No customer engagement or production result is implied. The design is realistic, but a real repair would require reproduction in the buyer’s authorized environment.</p></div>
+
+          <section aria-labelledby="summary-title">
+            <p class="eyebrow">Executive summary</p>
+            <h2 id="summary-title">Duplicate delivery was treated as a new business event.</h2>
+            <p>The fictional billing provider retried subscription events whenever the workflow did not acknowledge within ten seconds. The original n8n flow waited for CRM and notification branches before responding, had no durable idempotency record, and retried permanent validation errors. A transient CRM timeout therefore produced both delayed acknowledgements and duplicate contacts.</p>
+            <p>The synthetic patch separates receipt from processing: validate and persist the event once, return <code>202 Accepted</code>, then process durable per-destination work. A unique provider event ID prevents duplicate business effects; bounded retry with jitter handles transient faults; permanent failures enter a review queue with an alert.</p>
+          </section>
+
+          <section aria-labelledby="workflow-title">
+            <p class="eyebrow">Workflow description</p>
+            <h2 id="workflow-title">Fictional subscription activation flow.</h2>
+            <div class="diagram" role="img" aria-label="Billing provider posts a webhook; the receiver verifies and stores the event; a worker maps the payload; durable destination tasks update a CRM, send an onboarding notification and record status.">
+              <div class="diagram-node"><strong>Billing webhook</strong><span>Signed subscription-activated event</span></div>
+              <div class="diagram-node"><strong>Event inbox</strong><span>Validate, store once, acknowledge quickly</span></div>
+              <div class="diagram-node"><strong>Mapping worker</strong><span>Normalize account and plan fields</span></div>
+              <div class="diagram-node"><strong>CRM task</strong><span>Upsert account by stable external key</span></div>
+              <div class="diagram-node"><strong>Notification task</strong><span>Send onboarding message once</span></div>
+              <div class="diagram-node"><strong>Operations log</strong><span>State, attempts, next retry and alerts</span></div>
+            </div>
+          </section>
+
+          <section aria-labelledby="symptoms-title">
+            <p class="eyebrow">Failure symptoms</p>
+            <h2 id="symptoms-title">What an operator observed.</h2>
+            <ul>
+              <li>Two CRM contacts and two onboarding messages for one subscription activation.</li>
+              <li>Some valid subscriptions missing from the CRM after a temporary outage.</li>
+              <li>Provider webhook logs showing several deliveries of the same event ID.</li>
+              <li>n8n executions marked failed when only the CRM branch failed.</li>
+              <li>No single view showing whether a delivery was pending, retried, complete or abandoned.</li>
+            </ul>
+          </section>
+
+          <section aria-labelledby="reproduction-title">
+            <p class="eyebrow">Reproduction</p>
+            <h2 id="reproduction-title">Minimal steps that expose the fault.</h2>
+            <ol>
+              <li>Send a valid, signed synthetic <code>subscription.activated</code> event with provider event ID <code>evt_demo_1042</code>.</li>
+              <li>Configure the CRM stub to delay for twelve seconds on the first request—longer than the provider acknowledgement window.</li>
+              <li>Observe that the original flow withholds its response and the provider repeats the same event.</li>
+              <li>Restore the CRM stub and allow both executions to finish.</li>
+              <li>Observe two create requests and two notification requests for one provider event.</li>
+            </ol>
+            <p class="evidence">Synthetic evidence excerpt — 09:14:07 delivery 1 timed out; 09:14:19 delivery 2 accepted; CRM create calls for external_account=acct_demo_77: 2.</p>
+          </section>
+
+          <section aria-labelledby="root-cause-title">
+            <p class="eyebrow">Root cause</p>
+            <h2 id="root-cause-title">Acknowledgement, orchestration and business effects were coupled.</h2>
+            <ol>
+              <li><strong>No idempotency boundary:</strong> the flow did not claim the provider event ID in durable storage before calling downstream systems.</li>
+              <li><strong>Slow acknowledgement:</strong> it returned success only after all downstream branches completed, so a healthy provider retried during a slow dependency.</li>
+              <li><strong>Non-idempotent destination action:</strong> the CRM branch used “create” rather than upsert against a stable external account key.</li>
+              <li><strong>Unsafe retry classification:</strong> timeouts, 429/5xx responses and permanent 400 validation errors shared one generic retry path.</li>
+              <li><strong>Weak observability:</strong> execution logs did not expose per-event and per-destination state or alert after exhaustion.</li>
+            </ol>
+          </section>
+
+          <section aria-labelledby="behavior-title">
+            <p class="eyebrow">Before / after</p>
+            <h2 id="behavior-title">The behavioral contract after repair.</h2>
+            <div class="table-wrap">
+              <table>
+                <caption>Changed reliability behavior</caption>
+                <thead><tr><th>Condition</th><th>Before</th><th>After</th></tr></thead>
+                <tbody>
+                  <tr><td>Valid first delivery</td><td>Wait for all integrations, then acknowledge.</td><td>Verify signature, claim unique event, persist payload hash, return 202; process asynchronously.</td></tr>
+                  <tr><td>Duplicate event ID</td><td>Start a second full execution.</td><td>Return the recorded acceptance result without repeating business effects.</td></tr>
+                  <tr><td>CRM timeout / 429 / 5xx</td><td>Fail the whole workflow; provider may retry everything.</td><td>Retry only the CRM destination with exponential backoff and jitter.</td></tr>
+                  <tr><td>CRM 400 validation error</td><td>Retry indefinitely or until generic execution limit.</td><td>Mark permanent failure, preserve evidence, alert and await human correction.</td></tr>
+                  <tr><td>Retry exhaustion</td><td>Hidden in execution history.</td><td>Move destination task to review state and emit one deduplicated alert.</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+
+          <section aria-labelledby="tests-title">
+            <p class="eyebrow">Verification</p>
+            <h2 id="tests-title">Five synthetic test cases.</h2>
+            <div class="table-wrap">
+              <table>
+                <caption>Test evidence — synthetic demonstration</caption>
+                <thead><tr><th>ID</th><th>Purpose &amp; setup</th><th>Expected behavior</th><th>Observed synthetic evidence</th><th>Result</th></tr></thead>
+                <tbody>
+                  <tr><td>WF-01</td><td>Happy path: one valid event; all stubs return 2xx.</td><td>202 in under 500 ms; one CRM upsert; one notification; event complete.</td><td>ACK 84 ms; crm_calls=1; notify_calls=1; state=complete.</td><td class="result-pass">Pass</td></tr>
+                  <tr><td>WF-02</td><td>Duplicate/idempotency: deliver <code>evt_demo_1042</code> five times concurrently.</td><td>All deliveries accepted; one durable event; each destination executes once.</td><td>responses=5×202; event_rows=1; crm_calls=1; notify_calls=1.</td><td class="result-pass">Pass</td></tr>
+                  <tr><td>WF-03</td><td>Downstream failure: CRM returns 400; notification remains healthy.</td><td>No blind retry of 400; CRM task requires review; independent notification state remains explicit.</td><td>crm_attempts=1; crm_state=review; reason=invalid_field; alert_id=al_demo_31.</td><td class="result-pass">Pass</td></tr>
+                  <tr><td>WF-04</td><td>Retry: CRM returns 503 twice, then 200.</td><td>Retry only CRM with bounded exponential backoff plus jitter; no duplicate notification.</td><td>crm_attempts=3 at 0s/31s/94s; final=complete; notify_calls=1.</td><td class="result-pass">Pass</td></tr>
+                  <tr><td>WF-05</td><td>Alert/recovery: CRM stays 503 through limit, then operator requeues after recovery.</td><td>One alert after exhaustion; preserved payload reference; authorized requeue completes without duplicate side effects.</td><td>alerts=1; state=review; requeue_actor=ops_demo; crm_calls_after_requeue=1; final=complete.</td><td class="result-pass">Pass</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <p class="small">Synthetic timings and identifiers illustrate the evidence format. They are not measurements from a live system.</p>
+          </section>
+
+          <section aria-labelledby="implementation-title">
+            <p class="eyebrow">Patch outline</p>
+            <h2 id="implementation-title">Implementation decisions.</h2>
+            <ul>
+              <li>Verify the webhook signature against the unmodified request body before parsing.</li>
+              <li>Store only the fields required for processing; record a payload hash for duplicate mismatch detection.</li>
+              <li>Enforce a unique database constraint on provider plus provider event ID.</li>
+              <li>Use destination records with their own state, attempt count and next-attempt time.</li>
+              <li>Use exponential backoff with jitter for timeouts, 429 and selected 5xx responses; honor <code>Retry-After</code> when present.</li>
+              <li>Do not retry authentication, permission or schema errors without an explicit rule.</li>
+              <li>Upsert the CRM record by stable external account ID and attach the source event ID.</li>
+              <li>Deduplicate alerts by destination task plus failure cycle so retries do not page repeatedly.</li>
+            </ul>
+          </section>
+
+          <section aria-labelledby="risks-title">
+            <p class="eyebrow">Remaining risks</p>
+            <h2 id="risks-title">What the patch does not magically solve.</h2>
+            <ul>
+              <li>A provider can reuse an event ID incorrectly; a stored payload hash detects but cannot resolve that contract violation.</li>
+              <li>A downstream API may accept a request and time out before responding. Destination-level idempotency keys or safe lookup-before-retry are still required.</li>
+              <li>Out-of-order subscription events need a version or occurred-at rule; event-ID deduplication alone does not order them.</li>
+              <li>Retention, redaction, queue capacity, rate limits and recovery objectives need environment-specific decisions.</li>
+              <li>Changes to provider schemas and authentication require monitoring and contract tests.</li>
+            </ul>
+          </section>
+
+          <section aria-labelledby="handoff-title">
+            <p class="eyebrow">Handoff checklist</p>
+            <h2 id="handoff-title">Operator-ready closeout.</h2>
+            <ul class="checklist">
+              <li>Acceptance criteria and tested event types are recorded.</li>
+              <li>Test payloads are synthetic and contain no customer data.</li>
+              <li>Secret values remain in the approved secret store, not workflow exports.</li>
+              <li>Idempotency key, retention period and payload-hash behavior are documented.</li>
+              <li>Retryable and permanent status classes are listed.</li>
+              <li>Attempt limit, backoff schedule and alert threshold are documented.</li>
+              <li>Review and authorized requeue steps are demonstrated.</li>
+              <li>Rollback or workflow-disable procedure is recorded.</li>
+              <li>Dashboard queries for pending, review and oldest-event age are available.</li>
+              <li>Known risks and owner for each follow-up are written down.</li>
+            </ul>
+            <div class="notice"><p><strong>Synthetic demonstration conclusion:</strong> the fictional acceptance tests pass, but production readiness would still depend on environment-specific load, security, data, monitoring and recovery review.</p></div>
+            <div class="actions"><a class="button" href="mailto:niyampaneru79@gmail.com?subject=Workflow%20Reliability%20Sprint&amp;body=Workflow%20platform%3A%0A%0AFailure%20symptom%3A%0A%0AExpected%20behavior%3A%0A%0ATest%20environment%3A%0A%0AAcceptance%20criteria%3A">Ask about a reliability sprint</a><a class="button button-secondary" href="index.html#services">Back to services</a></div>
+          </section>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container footer-grid"><div><h2>Niyam Paneru</h2><p>Focused, tested implementation sprints for web apps, APIs, automations and voice-agent launch QA.</p><p class="small">This report is a synthetic demonstration.</p></div><nav class="footer-links" aria-label="Footer navigation"><a href="index.html#services">Services</a><a href="case-study-dentsignal.html">Case study</a><a href="voice-agent-qa.html">Voice QA</a><a href="index.html#boundaries">Boundaries</a><a href="index.html#privacy">Privacy</a><a href="mailto:niyampaneru79@gmail.com">Email</a></nav></div>
+    </footer>
+  </body>
+</html>
