@@ -26,7 +26,7 @@ to:
 https://SECOND_USERNAME.github.io
 ```
 
-The replacement script updates canonical URLs, Open Graph page URLs, Open Graph image URLs, README references and this migration document. Current base-URL occurrences are intentionally located in:
+The replacement script updates canonical URLs, Open Graph page URLs, Open Graph image URLs, README references and this migration document. It also activates the reviewed `main`-branch Pages trigger that is intentionally dormant in the locked source repository. Current base-URL occurrences are intentionally located in:
 
 - `index.html`
 - `case-study-dentsignal.html`
@@ -115,6 +115,7 @@ Expected:
 - the first `rg` command returns no old service-site base URL in public HTML or the README (the replacement script deliberately retains its source constant so it can be audited);
 - the second returns only the documented DentSignal separation/case-study references;
 - no `CNAME` file exists;
+- `.github/workflows/pages.yml` changes from manual-only to `main` push plus manual dispatch;
 - no secret, token or credential file appears in `git status`.
 
 ## 5. Run the site checks before pushing
@@ -134,7 +135,7 @@ Do not push if any check fails. Fix the smallest source issue, rerun all checks,
 ## 6. Commit and push to the second account
 
 ```bash
-git add index.html case-study-dentsignal.html sample-web-app-launch-blocker.html sample-fastapi-api-repair.html sample-workflow-reliability.html sample-voice-agent-qa.html voice-agent-qa.html README.md MIGRATION.md
+git add .github/workflows/pages.yml index.html case-study-dentsignal.html sample-web-app-launch-blocker.html sample-fastapi-api-repair.html sample-workflow-reliability.html sample-voice-agent-qa.html voice-agent-qa.html README.md MIGRATION.md
 git commit -m "Point service site to second GitHub Pages account"
 git remote rename origin locked-origin
 git remote add origin https://github.com/SECOND_USERNAME/SECOND_USERNAME.github.io.git
@@ -154,7 +155,7 @@ While signed in as the `SECOND_USERNAME` repository owner:
 4. Under **Build and deployment → Source**, select **GitHub Actions**.
 5. Leave **Custom domain** empty.
 6. Open the **Actions** tab and select **Deploy static site to GitHub Pages**.
-7. If the push did not trigger a run, use **Run workflow** on `main` once.
+7. The migration commit should trigger a run because the replacement script activates the reviewed `main`-branch trigger. If no run appears, use **Run workflow** on `main` once.
 8. Open the run and confirm every `deploy` step succeeds: checkout, configure Pages, upload artifact and deploy Pages.
 
 Do not change DentSignal DNS, Vercel, HTTPS, Azure or any DentSignal repository setting.

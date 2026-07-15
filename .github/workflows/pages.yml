@@ -1,9 +1,8 @@
 name: Deploy static site to GitHub Pages
 
 on:
-  push:
-    branches: ["main"]
   workflow_dispatch:
+  # SECOND_ACCOUNT_PUSH_TRIGGER
 
 permissions:
   contents: read

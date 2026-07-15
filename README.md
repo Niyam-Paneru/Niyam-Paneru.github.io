@@ -18,7 +18,7 @@ node --check assets/script.js
 npx cspell "*.html" "*.md" "samples/*.md"
 ```
 
-The GitHub Pages workflow deploys the repository root after a push to `main`.
+The locked source account's Pages workflow is intentionally manual-only so merging repository preparation cannot start a blocked deployment. The migration script restores the reviewed `main` push trigger in the second-account copy before its first push.
 
 ## Domain boundary
 
