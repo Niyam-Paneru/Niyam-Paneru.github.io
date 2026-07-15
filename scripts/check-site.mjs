@@ -17,6 +17,19 @@ const files = walk(root);
 const htmlFiles = files.filter((file) => extname(file) === ".html");
 const failures = [];
 
+if (files.includes(join(root, "CNAME"))) failures.push("CNAME must remain absent from the service-site repository");
+
+for (const requiredFile of [
+  "MIGRATION.md",
+  "scripts/replace-base-url.mjs",
+  "sample-web-app-launch-blocker.html",
+  "sample-fastapi-api-repair.html",
+  "samples/web-app-launch-blocker-repair-report.md",
+  "samples/fastapi-api-debugging-repair-report.md",
+]) {
+  if (!files.includes(join(root, requiredFile))) failures.push(`missing required file ${requiredFile}`);
+}
+
 const localTarget = (source, href) => {
   const withoutFragment = href.split("#")[0].split("?")[0];
   if (!withoutFragment) return source;
@@ -74,9 +87,45 @@ for (const file of htmlFiles) {
     if (!/rel="[^"]*noopener[^"]*"/.test(match[0])) failures.push(`${rel}: target=_blank without noopener`);
   }
 
+  const primaryNavigation = content.match(/<nav class="site-nav"[\s\S]*?<\/nav>/)?.[0] ?? "";
+  if (/voice-agent-qa\.html|>Voice QA</i.test(primaryNavigation)) {
+    failures.push(`${rel}: Voice QA must remain outside primary navigation`);
+  }
+
   if (rel.startsWith("sample-") && (content.match(/Synthetic demonstration/gi) ?? []).length < 3) {
     failures.push(`${rel}: synthetic label is not repeated enough`);
   }
+}
+
+const home = readFileSync(join(root, "index.html"), "utf8");
+const requiredPrimaryOffers = [
+  "Quick Technical Fix",
+  "Web App Launch-Blocker Sprint",
+  "API &amp; Backend Repair Sprint",
+  "Workflow Reliability Sprint",
+  "Small Build Sprint",
+];
+for (const offer of requiredPrimaryOffers) {
+  if (!home.includes(offer)) failures.push(`index.html: missing primary offer ${offer}`);
+}
+
+const specialistIndex = home.indexOf("Secondary specialist service");
+const lastPrimaryIndex = Math.max(...requiredPrimaryOffers.map((offer) => home.indexOf(offer)));
+if (specialistIndex === -1 || specialistIndex < lastPrimaryIndex) {
+  failures.push("index.html: specialist Voice QA must follow all primary service lanes");
+}
+
+for (const proofLink of [
+  "sample-web-app-launch-blocker.html",
+  "sample-fastapi-api-repair.html",
+  "sample-workflow-reliability.html",
+  "case-study-dentsignal.html",
+]) {
+  if (!home.includes(`href="${proofLink}"`)) failures.push(`index.html: missing proof link ${proofLink}`);
+}
+
+if (!/supporting evidence/i.test(home)) {
+  failures.push("index.html: DentSignal must be described as supporting evidence");
 }
 
 const textExtensions = new Set([".css", ".html", ".js", ".json", ".jsonc", ".md", ".mjs", ".svg", ".txt", ".yaml", ".yml"]);

@@ -99,6 +99,7 @@ code {
   border-radius: 0.25rem;
   background: #e9edf1;
   padding: 0.12em 0.35em;
+  overflow-wrap: anywhere;
   font-size: 0.92em;
 }
 
@@ -362,6 +363,61 @@ code {
   margin-top: 0;
   font-size: 1.12rem;
   font-weight: 850;
+}
+
+.service-cards {
+  align-items: stretch;
+}
+
+.specialist-offer,
+.voice-proof-note {
+  display: grid;
+  margin-top: 1.5rem;
+  grid-template-columns: minmax(0, 1.25fr) minmax(16rem, 0.75fr);
+  align-items: center;
+  gap: clamp(1.25rem, 4vw, 2.5rem);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: #f9fafb;
+  padding: clamp(1.25rem, 3vw, 1.8rem);
+}
+
+.specialist-offer .price {
+  color: var(--ink);
+  font-weight: 850;
+}
+
+.proof-showcase {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.proof-primary {
+  grid-column: span 6;
+  border-color: var(--accent);
+}
+
+.proof-workflow {
+  grid-column: span 7;
+}
+
+.proof-case-study {
+  grid-column: span 5;
+}
+
+.proof-showcase .card > a + a {
+  margin-top: 0.35rem;
+}
+
+.voice-proof-note {
+  border-style: dashed;
+  box-shadow: none;
+}
+
+.voice-proof-note .actions {
+  margin-top: 0;
+  justify-content: flex-end;
 }
 
 .tag,
@@ -685,11 +741,27 @@ tr:last-child td {
   .section-heading,
   .cards,
   .quick-offer,
+  .specialist-offer,
+  .voice-proof-note,
   .proof-grid,
   .split,
   .architecture,
   .footer-grid {
     grid-template-columns: 1fr;
+  }
+
+  .proof-showcase {
+    grid-template-columns: 1fr;
+  }
+
+  .proof-primary,
+  .proof-workflow,
+  .proof-case-study {
+    grid-column: auto;
+  }
+
+  .voice-proof-note .actions {
+    justify-content: flex-start;
   }
 
   .numbered {

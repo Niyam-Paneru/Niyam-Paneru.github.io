@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
   <title id="title">Niyam Paneru focused engineering sprints</title>
-  <desc id="desc">Broken web app, API or AI workflow? Reproduce it, repair it and prove the fix.</desc>
+  <desc id="desc">Focused repair sprints for web apps, APIs, deployments and automations.</desc>
   <rect width="1200" height="630" fill="#f5f3ed"/>
   <circle cx="1040" cy="90" r="260" fill="#dff3ef"/>
   <rect x="72" y="72" width="64" height="64" rx="16" fill="#101b2d"/>
@@ -9,5 +9,5 @@
   <text x="72" y="255" fill="#0b6b62" font-family="Arial, sans-serif" font-size="25" font-weight="700" letter-spacing="3">FOCUSED ENGINEERING SPRINTS</text>
   <text x="72" y="350" fill="#101b2d" font-family="Georgia, serif" font-size="66" font-weight="700">Reproduce it. Repair it.</text>
   <text x="72" y="430" fill="#101b2d" font-family="Georgia, serif" font-size="66" font-weight="700">Prove the fix.</text>
-  <text x="72" y="530" fill="#526174" font-family="Arial, sans-serif" font-size="27">Web apps · APIs · AI workflows · Voice-agent QA</text>
+  <text x="72" y="530" fill="#526174" font-family="Arial, sans-serif" font-size="27">Web apps · APIs · Deployments · Automations</text>
 </svg>
