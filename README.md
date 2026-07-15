@@ -20,9 +20,9 @@ npx cspell "*.html" "README.md" "samples/*.md"
 
 The GitHub Pages workflow deploys the repository root after a push to `main`.
 
-## Important custom-domain note
+## Domain boundary
 
-The base branch contained a `CNAME` file pointing the username repository at `dentsignal.me`, which is already serving the separate DentSignal site. This branch removes that file so the service site is designed for the standard `https://niyam-paneru.github.io/` address. Do not merge until the repository Pages settings and the existing `dentsignal.me` DNS/Vercel binding have been reviewed. Opening this pull request does not alter the current deployment.
+The legacy GitHub Pages custom-domain association and `CNAME` file for `dentsignal.me` were removed before the initial service-site merge. This repository is intended only for `https://niyam-paneru.github.io/`. Do not add a custom domain here or change the separate DentSignal DNS/Vercel deployment as part of service-site work.
 
 ## Content boundaries
 
