@@ -21,7 +21,7 @@ const localTarget = (source, href) => {
   const withoutFragment = href.split("#")[0].split("?")[0];
   if (!withoutFragment) return source;
   return withoutFragment.startsWith("/")
-    ? join(root, withoutFragment.slice(1))
+    ? join(root, withoutFragment.slice(1) || "index.html")
     : normalize(join(dirname(source), withoutFragment));
 };
 
@@ -31,6 +31,20 @@ for (const file of htmlFiles) {
 
   for (const required of ["<title>", 'name="description"', "<main", "</html>"]) {
     if (!content.includes(required)) failures.push(`${rel}: missing ${required}`);
+  }
+
+  if (rel !== "404.html") {
+    const canonical = content.match(/<link rel="canonical" href="([^"]+)">/)?.[1];
+    const socialUrl = content.match(/<meta property="og:url" content="([^"]+)">/)?.[1];
+    if (!canonical) failures.push(`${rel}: missing canonical URL`);
+    if (!socialUrl) failures.push(`${rel}: missing og:url`);
+    if (canonical && socialUrl && canonical !== socialUrl) failures.push(`${rel}: canonical and og:url differ`);
+  }
+
+  if (rel === "404.html") {
+    for (const requiredRootUrl of ['/assets/styles.css', '/assets/script.js', '/assets/favicon.svg', 'href="/"']) {
+      if (!content.includes(requiredRootUrl)) failures.push(`${rel}: missing rooted URL ${requiredRootUrl}`);
+    }
   }
 
   const ids = [...content.matchAll(/\sid="([^"]+)"/g)].map((match) => match[1]);
