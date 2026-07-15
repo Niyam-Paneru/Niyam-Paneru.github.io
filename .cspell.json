@@ -5,8 +5,13 @@
     "AKIA",
     "ASIA",
     "automations",
+    "Avery",
+    "csstree",
     "DentSignal",
     "dentsignal",
+    "FastAPI",
+    "Finch",
+    "Harbor",
     "HVAC",
     "labelledby",
     "lede",
@@ -15,7 +20,13 @@
     "noopener",
     "Paneru",
     "pousr",
+    "prerender",
+    "prerendering",
+    "Pydantic",
+    "reauthentication",
+    "Rookery",
     "retryable",
+    "SQLAlchemy",
     "Supabase"
   ]
 }

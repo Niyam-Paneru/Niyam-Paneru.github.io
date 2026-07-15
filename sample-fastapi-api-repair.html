@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Synthetic FastAPI/API Debugging and Repair Report | Niyam Paneru</title>
+    <meta name="description" content="Synthetic FastAPI repair report covering authentication, validation, transaction rollback, truthful errors and unit and integration tests.">
+    <meta name="author" content="Niyam Paneru">
+    <meta name="theme-color" content="#101b2d">
+    <link rel="canonical" href="https://niyam-paneru.github.io/sample-fastapi-api-repair.html">
+    <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="assets/styles.css">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="FastAPI/API Debugging and Repair Report — Synthetic Demonstration">
+    <meta property="og:description" content="A fictional endpoint repair with validation, authorization, transaction and failure-path evidence.">
+    <meta property="og:url" content="https://niyam-paneru.github.io/sample-fastapi-api-repair.html">
+    <meta property="og:image" content="https://niyam-paneru.github.io/assets/social-preview.png">
+    <meta property="og:image:type" content="image/png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Niyam Paneru — Reproduce it. Repair it. Prove the fix.">
+    <meta name="twitter:card" content="summary_large_image">
+    <script src="assets/script.js" defer></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to main content</a>
+    <header class="site-header">
+      <div class="nav-wrap">
+        <a class="brand" href="index.html" aria-label="Niyam Paneru home"><span class="brand-mark" aria-hidden="true">NP</span><span>Niyam Paneru</span></a>
+        <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-navigation" data-nav-toggle>Menu</button>
+        <nav class="site-nav" id="site-navigation" aria-label="Primary navigation" data-navigation>
+          <ul><li><a href="index.html#services">Services</a></li><li><a href="index.html#proof">Proof &amp; samples</a></li><li><a href="index.html#process">Process</a></li><li><a href="index.html#boundaries">Boundaries</a></li><li><a href="index.html#contact">Contact</a></li></ul>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main">
+      <header class="page-hero">
+        <div class="container narrow">
+          <nav class="breadcrumbs" aria-label="Breadcrumb"><a href="index.html">Home</a> / Proof &amp; samples / API repair</nav>
+          <span class="status">Synthetic demonstration</span>
+          <p class="eyebrow">Sample deliverable · not client work</p>
+          <h1>FastAPI/API Debugging &amp; Repair Report</h1>
+          <p class="lede">A fictional endpoint failure for Rookery Cloud Console, showing a bounded repair across authentication, validation, database transactions and truthful error behavior.</p>
+          <dl class="meta-grid">
+            <div><dt>Application</dt><dd>Rookery Cloud Console (fictional)</dd></div>
+            <div><dt>Stack</dt><dd>FastAPI, SQLAlchemy, PostgreSQL, JWT</dd></div>
+            <div><dt>Boundary</dt><dd>One member-invite endpoint</dd></div>
+          </dl>
+          <div class="actions"><a class="button button-secondary" href="samples/fastapi-api-debugging-repair-report.md">View Markdown source</a></div>
+        </div>
+      </header>
+
+      <section class="section">
+        <div class="container narrow stack">
+          <div class="callout"><p><strong>Synthetic demonstration:</strong> Rookery Cloud Console, its users, payloads, logs, identifiers and results are fictional. No customer engagement or production result is implied.</p></div>
+
+          <section aria-labelledby="api-summary-title">
+            <p class="eyebrow">Executive summary</p>
+            <h2 id="api-summary-title">Known client errors became 500s, and one failed request could partially commit.</h2>
+            <p>The fictional member-invite endpoint returned 500 for malformed roles, mixed-case duplicate emails and expired tokens. A forced audit failure could occur after the membership row had already committed.</p>
+            <p>The repair validates input before business logic, preserves correct authentication and permission responses, normalizes invite identity, writes membership and audit rows in one transaction, relies on database uniqueness for concurrency safety, and maps a known conflict to 409.</p>
+          </section>
+
+          <section aria-labelledby="endpoint-title">
+            <p class="eyebrow">Failing endpoint</p>
+            <h2 id="endpoint-title"><code>POST /v1/projects/{project_id}/members</code></h2>
+            <p class="evidence">Request: { "email": "Avery@example.test", "role": "owner-admin" }</p>
+            <p class="evidence">Before: 500 { "detail": "Unable to invite member" }</p>
+            <p class="evidence">Expected: 422 with a field-level role validation error</p>
+            <p class="small">The reserved <code>.test</code> address and all identifiers are synthetic.</p>
+          </section>
+
+          <section aria-labelledby="symptoms-title">
+            <p class="eyebrow">Failure symptoms</p>
+            <h2 id="symptoms-title">Four defects shared one endpoint boundary.</h2>
+            <ul>
+              <li>Different email letter case bypasses the application pre-check and reaches a unique constraint.</li>
+              <li>An unsupported role reaches a database check rather than returning request validation.</li>
+              <li>An expired JWT is caught by a broad handler and converted to a generic 500.</li>
+              <li>Membership commits before an audit insert, so audit failure can leave partial state.</li>
+              <li>Concurrent duplicates produce one 201 and one unhelpful 500.</li>
+              <li>Unexpected errors have no stable correlation reference.</li>
+            </ul>
+          </section>
+
+          <section aria-labelledby="api-repro-title">
+            <p class="eyebrow">Reproduction</p>
+            <h2 id="api-repro-title">Minimal test sequence.</h2>
+            <ol>
+              <li>Seed fictional project <code>prj_demo_18</code> and its owner.</li>
+              <li>Invite <code>avery@example.test</code>; observe 201.</li>
+              <li>Invite <code>Avery@example.test</code>; observe unique-constraint 500.</li>
+              <li>Send role <code>owner-admin</code>; observe database-check 500.</li>
+              <li>Send a valid body with an expired token; observe generic 500.</li>
+              <li>Force the audit repository to fail after membership flush; observe a partial row before repair.</li>
+              <li>Send two concurrent invites for one normalized email; observe one 201 and one 500.</li>
+            </ol>
+          </section>
+
+          <section aria-labelledby="issues-title">
+            <p class="eyebrow">Root cause</p>
+            <h2 id="issues-title">Validation, permission, transaction and error boundaries were blurred.</h2>
+            <div class="table-wrap">
+              <table>
+                <caption>Synthetic root-cause map</caption>
+                <thead><tr><th>Failure</th><th>Root cause</th><th>Repair</th></tr></thead>
+                <tbody>
+                  <tr><td>Invalid role → 500</td><td>Request accepts any string</td><td>Closed role type; reject with 422</td></tr>
+                  <tr><td>Expired token → 500</td><td>Broad handler catches auth exception</td><td>Preserve dependency response</td></tr>
+                  <tr><td>Editor reaches write</td><td>Membership checked, permission not checked</td><td>Owner permission before transaction</td></tr>
+                  <tr><td>Case duplicate → 500</td><td>Inconsistent identity normalization</td><td>One normalized identity field</td></tr>
+                  <tr><td>Concurrent duplicate → 500</td><td>Race-prone application pre-check</td><td>Named unique constraint; map to 409</td></tr>
+                  <tr><td>Partial membership</td><td>Membership and audit commit separately</td><td>One transaction</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+
+          <section aria-labelledby="api-repair-title">
+            <p class="eyebrow">Repair approach</p>
+            <h2 id="api-repair-title">Make every boundary return truthful behavior.</h2>
+            <ol>
+              <li>Validate email and allowed role values in the request model.</li>
+              <li>Resolve authentication and invite permission before opening the write transaction.</li>
+              <li>Normalize the invite identity once using the documented product rule.</li>
+              <li>Add membership and audit records inside one transaction and flush before success.</li>
+              <li>Keep the database unique constraint as the authoritative concurrent-duplicate boundary.</li>
+              <li>Translate only the named duplicate constraint to 409; preserve 401, 403, 404 and 422.</li>
+              <li>Return a safe correlation ID for unexpected 500s and keep secrets out of logs and responses.</li>
+            </ol>
+            <p class="evidence">Synthetic transaction: authorize → begin → add membership + audit → flush → commit once</p>
+          </section>
+
+          <section aria-labelledby="api-behavior-title">
+            <p class="eyebrow">Before / after</p>
+            <h2 id="api-behavior-title">Status codes now describe the tested outcome.</h2>
+            <div class="table-wrap">
+              <table>
+                <caption>Synthetic behavioral comparison</caption>
+                <thead><tr><th>Condition</th><th>Before</th><th>After</th></tr></thead>
+                <tbody>
+                  <tr><td>Valid owner invite</td><td>201 with separate commits</td><td>201 with atomic membership and audit</td></tr>
+                  <tr><td>Invalid email or role</td><td>Database failure → 500</td><td>Validation → 422</td></tr>
+                  <tr><td>Expired token</td><td>Generic 500</td><td>401; no write</td></tr>
+                  <tr><td>Editor invite</td><td>Reaches repository</td><td>403 before transaction</td></tr>
+                  <tr><td>Existing normalized email</td><td>Integrity 500</td><td>409 member_already_invited</td></tr>
+                  <tr><td>Concurrent duplicate</td><td>One 201, one 500</td><td>One 201, one 409, one row</td></tr>
+                  <tr><td>Audit failure</td><td>Partial membership remains</td><td>Both writes roll back</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+
+          <section aria-labelledby="api-tests-title">
+            <p class="eyebrow">Unit and integration tests</p>
+            <h2 id="api-tests-title">Eight focused checks, including the failure path.</h2>
+            <div class="table-wrap">
+              <table>
+                <caption>API repair evidence — synthetic demonstration</caption>
+                <thead><tr><th>ID</th><th>Level</th><th>Setup</th><th>Expected</th><th>Result</th></tr></thead>
+                <tbody>
+                  <tr><td>API-01</td><td>Unit</td><td>Unsupported role</td><td>422 before service call</td><td class="result-pass">Pass</td></tr>
+                  <tr><td>API-02</td><td>Unit</td><td>Expired JWT</td><td>401; service not invoked</td><td class="result-pass">Pass</td></tr>
+                  <tr><td>API-03</td><td>Unit</td><td>Editor identity</td><td>403; repository not invoked</td><td class="result-pass">Pass</td></tr>
+                  <tr><td>API-04</td><td>Integration</td><td>Authorized new invite</td><td>201; membership and audit</td><td class="result-pass">Pass</td></tr>
+                  <tr><td>API-05</td><td>Integration</td><td>Same email, different case</td><td>409; counts unchanged</td><td class="result-pass">Pass</td></tr>
+                  <tr><td>API-06</td><td>Integration</td><td>Concurrent duplicates</td><td>One 201, one 409, one row</td><td class="result-pass">Pass</td></tr>
+                  <tr><td>API-07</td><td>Integration</td><td>Forced audit failure</td><td>Safe 500; both rows roll back</td><td class="result-pass">Pass</td></tr>
+                  <tr><td>API-08</td><td>Integration</td><td>Unknown project</td><td>404; no existence leak</td><td class="result-pass">Pass</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+
+          <section aria-labelledby="failure-title">
+            <p class="eyebrow">Failure-path evidence</p>
+            <h2 id="failure-title">A failed audit write leaves no partial membership.</h2>
+            <ul class="checklist">
+              <li>Response contains only a safe error code and correlation ID.</li>
+              <li>Membership and audit counts both remain zero.</li>
+              <li>Structured server log contains the same reference and exception class.</li>
+              <li>Log excludes the bearer token, database URL and complete request headers.</li>
+              <li>Retry after dependency recovery can succeed exactly once.</li>
+            </ul>
+            <p class="small">Synthetic observation: all listed assertions pass.</p>
+          </section>
+
+          <section aria-labelledby="api-risks-title">
+            <p class="eyebrow">Remaining risks</p>
+            <h2 id="api-risks-title">The endpoint repair is not the whole product.</h2>
+            <ul>
+              <li>Email identity rules differ; normalization must match the product contract.</li>
+              <li>External invitation delivery needs an outbox or another idempotent post-commit design.</li>
+              <li>A 409 can disclose membership if permission checks are too broad.</li>
+              <li>Constraint names and migrations must match the deployed schema.</li>
+              <li>Rate limiting, invitation expiry, bulk invites, load and production release are excluded.</li>
+            </ul>
+          </section>
+
+          <section aria-labelledby="api-handoff-title">
+            <p class="eyebrow">Handoff checklist</p>
+            <h2 id="api-handoff-title">Contract, transaction and evidence recorded.</h2>
+            <ul class="checklist">
+              <li>Endpoint, accepted roles and response contract are documented.</li>
+              <li>Authentication and authorization order is explicit.</li>
+              <li>Normalized identity rule and database constraint are recorded.</li>
+              <li>Membership and audit writes share one transaction.</li>
+              <li>Known conflicts map to 409; invalid bodies map to 422.</li>
+              <li>Unexpected errors return a safe correlation reference.</li>
+              <li>Duplicate, concurrent-duplicate and rollback tests pass.</li>
+              <li>Production release and rollback remain owner-approved.</li>
+            </ul>
+            <div class="notice"><p><strong>Synthetic conclusion:</strong> the fictional endpoint returns truthful status codes and preserves transaction atomicity across the tested paths. No real customer, deployment or commercial result is claimed.</p></div>
+            <div class="actions"><a class="button" href="mailto:niyampaneru79@gmail.com?subject=API%20and%20Backend%20Repair%20Sprint&amp;body=Failing%20endpoint%3A%0A%0ARequest%20and%20response%20(redacted)%3A%0A%0AExpected%20behavior%3A%0A%0AFramework%20and%20database%3A%0A%0AAcceptance%20criteria%3A">Ask about an API repair</a><a class="button button-secondary" href="index.html#services">Back to services</a></div>
+          </section>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container footer-grid"><div><h2>Niyam Paneru</h2><p>Focused, tested repair and implementation sprints for web apps, APIs, deployments and automations.</p><p class="small">This report is a synthetic demonstration.</p></div><nav class="footer-links" aria-label="Footer navigation"><a href="index.html#services">Services</a><a href="index.html#proof">Proof &amp; samples</a><a href="case-study-dentsignal.html">Case study</a><a href="voice-agent-qa.html">Specialist Voice QA</a><a href="index.html#boundaries">Boundaries</a><a href="mailto:niyampaneru79@gmail.com">Email</a></nav></div>
+    </footer>
+  </body>
+</html>

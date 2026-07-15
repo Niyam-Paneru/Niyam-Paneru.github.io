@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Synthetic Web App Launch-Blocker Repair Report | Niyam Paneru</title>
+    <meta name="description" content="Synthetic demonstration of a Next.js launch-blocker repair report with reproduction, code-level repair, regression, mobile and deployment checks.">
+    <meta name="author" content="Niyam Paneru">
+    <meta name="theme-color" content="#101b2d">
+    <link rel="canonical" href="https://niyam-paneru.github.io/sample-web-app-launch-blocker.html">
+    <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="assets/styles.css">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Web App Launch-Blocker Repair Report — Synthetic Demonstration">
+    <meta property="og:description" content="A fictional Next.js direct-load and production-build repair with evidence-led verification.">
+    <meta property="og:url" content="https://niyam-paneru.github.io/sample-web-app-launch-blocker.html">
+    <meta property="og:image" content="https://niyam-paneru.github.io/assets/social-preview.png">
+    <meta property="og:image:type" content="image/png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Niyam Paneru — Reproduce it. Repair it. Prove the fix.">
+    <meta name="twitter:card" content="summary_large_image">
+    <script src="assets/script.js" defer></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to main content</a>
+    <header class="site-header">
+      <div class="nav-wrap">
+        <a class="brand" href="index.html" aria-label="Niyam Paneru home"><span class="brand-mark" aria-hidden="true">NP</span><span>Niyam Paneru</span></a>
+        <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-navigation" data-nav-toggle>Menu</button>
+        <nav class="site-nav" id="site-navigation" aria-label="Primary navigation" data-navigation>
+          <ul><li><a href="index.html#services">Services</a></li><li><a href="index.html#proof">Proof &amp; samples</a></li><li><a href="index.html#process">Process</a></li><li><a href="index.html#boundaries">Boundaries</a></li><li><a href="index.html#contact">Contact</a></li></ul>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main">
+      <header class="page-hero">
+        <div class="container narrow">
+          <nav class="breadcrumbs" aria-label="Breadcrumb"><a href="index.html">Home</a> / Proof &amp; samples / Web app repair</nav>
+          <span class="status">Synthetic demonstration</span>
+          <p class="eyebrow">Sample deliverable · not client work</p>
+          <h1>Web App Launch-Blocker Repair Report</h1>
+          <p class="lede">A fictional Next.js route failure for Harbor Finch Workspace, created to show how I would reproduce, repair and verify one launch-blocking web-app defect.</p>
+          <dl class="meta-grid">
+            <div><dt>Application</dt><dd>Harbor Finch Workspace (fictional)</dd></div>
+            <div><dt>Stack</dt><dd>Next.js, React, TypeScript</dd></div>
+            <div><dt>Boundary</dt><dd>One route and data-loading path</dd></div>
+          </dl>
+          <div class="actions"><a class="button button-secondary" href="samples/web-app-launch-blocker-repair-report.md">View Markdown source</a></div>
+        </div>
+      </header>
+
+      <section class="section">
+        <div class="container narrow stack">
+          <div class="callout"><p><strong>Synthetic demonstration:</strong> Harbor Finch Workspace, its routes, logs, commits and results are fictional. No customer engagement, production deployment or business outcome is implied.</p></div>
+
+          <section aria-labelledby="summary-title">
+            <p class="eyebrow">Executive summary</p>
+            <h2 id="summary-title">Client navigation hid a broken direct-load path.</h2>
+            <p>The fictional billing page worked when opened from an already-loaded dashboard but failed on a direct link, refresh and production prerender. A migrated App Router page still relied on the legacy Pages Router and a transient client store for the workspace identifier.</p>
+            <p>The repair makes the URL parameter the source of truth, validates it on the server, loads authorized workspace data explicitly, and renders deliberate loading, access, not-found and dependency-failure states. The synthetic production preview, mobile and nearby regression checks pass.</p>
+          </section>
+
+          <section aria-labelledby="symptom-title">
+            <p class="eyebrow">Visible symptom</p>
+            <h2 id="symptom-title">Blank billing panel after refresh or shared link.</h2>
+            <ul>
+              <li>Dashboard-to-billing navigation usually succeeds.</li>
+              <li>A new tab or browser refresh requests an undefined workspace.</li>
+              <li>The page remains on a spinner and then throws a render error.</li>
+              <li>The production build fails while prerendering the migrated route.</li>
+              <li>The mobile error action overflows its card at 390 px.</li>
+            </ul>
+            <p class="evidence">GET /api/workspaces/undefined/billing-summary 404</p>
+            <p class="evidence">TypeError: Cannot read properties of null (reading 'plan')</p>
+            <p class="evidence">Error: NextRouter was not mounted — prerendering /workspaces/[workspaceId]/billing</p>
+          </section>
+
+          <section aria-labelledby="repro-title">
+            <p class="eyebrow">Reproduction</p>
+            <h2 id="repro-title">Minimal steps that expose the blocker.</h2>
+            <ol>
+              <li>Use a clean browser profile with no active-workspace state.</li>
+              <li>Sign in as the fictional authorized workspace owner.</li>
+              <li>Open <code>/workspaces/ws_demo_17/billing</code> directly.</li>
+              <li>Observe a request containing <code>undefined</code> and a permanent spinner.</li>
+              <li>Open the dashboard first, select the workspace, then navigate to billing; observe that it works.</li>
+              <li>Run a clean production build and observe the route prerender error.</li>
+            </ol>
+          </section>
+
+          <section aria-labelledby="cause-title">
+            <p class="eyebrow">Root cause</p>
+            <h2 id="cause-title">The URL was not the route's source of truth.</h2>
+            <ol>
+              <li><strong>Wrong router contract:</strong> the App Router page expected <code>router.query.workspaceId</code> from the legacy Pages Router.</li>
+              <li><strong>Transient identity:</strong> request construction preferred a client store that only the dashboard populated.</li>
+              <li><strong>Unsafe render:</strong> the component dereferenced <code>summary.plan</code> before a successful response existed.</li>
+              <li><strong>Fixed-width fallback:</strong> the error action was wider than the mobile viewport.</li>
+            </ol>
+            <p>The backend returned correct data for valid workspace identifiers. Changing it would not repair the route and was kept outside scope.</p>
+          </section>
+
+          <section aria-labelledby="repair-title">
+            <p class="eyebrow">Code-level repair</p>
+            <h2 id="repair-title">Validate the route identity before rendering the client form.</h2>
+            <ul>
+              <li>Receive and validate <code>params.workspaceId</code> in the server page.</li>
+              <li>Resolve the authenticated user and load only the authorized workspace.</li>
+              <li>Pass explicit <code>workspaceId</code> and initial summary data into the client component.</li>
+              <li>Remove the client store from API URL construction.</li>
+              <li>Render explicit unauthenticated, forbidden, not-found, empty and dependency-failure states.</li>
+              <li>Replace the fixed-width fallback with fluid sizing and wrapping actions.</li>
+            </ul>
+            <p class="evidence">Synthetic repair shape: server params → validate → authorize → fetch → explicit client props</p>
+          </section>
+
+          <section aria-labelledby="behavior-title">
+            <p class="eyebrow">Before / after</p>
+            <h2 id="behavior-title">The same route now behaves consistently.</h2>
+            <div class="table-wrap">
+              <table>
+                <caption>Synthetic behavioral comparison</caption>
+                <thead><tr><th>Condition</th><th>Before</th><th>After</th></tr></thead>
+                <tbody>
+                  <tr><td>Direct load</td><td>Undefined request and permanent spinner</td><td>Validated URL ID and rendered summary</td></tr>
+                  <tr><td>Dashboard navigation</td><td>Works only with warm client state</td><td>Works independently of navigation history</td></tr>
+                  <tr><td>Refresh</td><td>Blank panel / render exception</td><td>Matches direct-load behavior</td></tr>
+                  <tr><td>Unknown workspace</td><td>Generic loading state</td><td>Deliberate not-found state</td></tr>
+                  <tr><td>Expired session</td><td>Generic failure</td><td>Safe sign-in path</td></tr>
+                  <tr><td>API unavailable</td><td>Null dereference</td><td>Retry control and correlation reference</td></tr>
+                  <tr><td>Production build</td><td>Prerender failure</td><td>Clean build</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+
+          <section aria-labelledby="checks-title">
+            <p class="eyebrow">Regression checks</p>
+            <h2 id="checks-title">Eight focused synthetic checks.</h2>
+            <div class="table-wrap">
+              <table>
+                <caption>Web repair evidence — synthetic demonstration</caption>
+                <thead><tr><th>ID</th><th>Check</th><th>Expected</th><th>Observed synthetic evidence</th><th>Result</th></tr></thead>
+                <tbody>
+                  <tr><td>WEB-01</td><td>Authorized direct URL</td><td>Summary renders</td><td>Correct workspace and plan; one request</td><td class="result-pass">Pass</td></tr>
+                  <tr><td>WEB-02</td><td>Dashboard navigation</td><td>Same output</td><td>No identity read from client store</td><td class="result-pass">Pass</td></tr>
+                  <tr><td>WEB-03</td><td>Refresh after edit</td><td>Persisted value reloads</td><td>Saved value displayed</td><td class="result-pass">Pass</td></tr>
+                  <tr><td>WEB-04</td><td>Unknown workspace</td><td>No data leak</td><td>Not-found state; no summary fields</td><td class="result-pass">Pass</td></tr>
+                  <tr><td>WEB-05</td><td>Unauthorized user</td><td>Access denied</td><td>403 state; no retry loop</td><td class="result-pass">Pass</td></tr>
+                  <tr><td>WEB-06</td><td>Expired session</td><td>Safe reauthentication</td><td>Relative return URL</td><td class="result-pass">Pass</td></tr>
+                  <tr><td>WEB-07</td><td>Summary API 503</td><td>No crash</td><td>Reference and retry control</td><td class="result-pass">Pass</td></tr>
+                  <tr><td>WEB-08</td><td>Empty history</td><td>Valid empty state</td><td>Setup action remains visible</td><td class="result-pass">Pass</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+
+          <section aria-labelledby="mobile-title">
+            <p class="eyebrow">Mobile and deployment checks</p>
+            <h2 id="mobile-title">The repair closes at the preview boundary.</h2>
+            <div class="split">
+              <div>
+                <h3>390 px mobile</h3>
+                <ul class="checklist">
+                  <li>No page-level horizontal overflow.</li>
+                  <li>Error copy and actions wrap inside the card.</li>
+                  <li>Touch targets remain at least 44 px.</li>
+                  <li>Keyboard focus remains visible.</li>
+                  <li>Wide billing data stays in its scroll container.</li>
+                </ul>
+              </div>
+              <div>
+                <h3>Production preview</h3>
+                <ul class="checklist">
+                  <li>Clean lockfile install, type check and build pass.</li>
+                  <li>Preview deployment becomes healthy.</li>
+                  <li>Direct interior URL and refresh succeed.</li>
+                  <li>No new console or failed-summary errors.</li>
+                  <li>Rollback commit is recorded before release.</li>
+                </ul>
+              </div>
+            </div>
+            <p class="small">Synthetic preview checks pass. Production release is not claimed and remains the owner's approval decision.</p>
+          </section>
+
+          <section aria-labelledby="risks-title">
+            <p class="eyebrow">Remaining risks</p>
+            <h2 id="risks-title">What this bounded repair does not cover.</h2>
+            <ul>
+              <li>Other migrated workspace routes may still depend on transient client state.</li>
+              <li>The backend must continue to enforce workspace authorization.</li>
+              <li>Billing-data cache freshness needs an environment-specific policy.</li>
+              <li>Provider outages can still make billing information unavailable.</li>
+              <li>Payment writes, migration, load testing and production release are excluded.</li>
+            </ul>
+          </section>
+
+          <section aria-labelledby="handoff-title">
+            <p class="eyebrow">Handoff notes</p>
+            <h2 id="handoff-title">A closeout another engineer can inspect.</h2>
+            <ul class="checklist">
+              <li>Repair boundary and acceptance criteria are written.</li>
+              <li>Direct load, navigation and refresh use one route identity.</li>
+              <li>Response states 200, 401, 403, 404 and 503 were exercised.</li>
+              <li>No secret values appear in evidence.</li>
+              <li>Mobile, keyboard and preview checks are recorded.</li>
+              <li>Production release remains owner-approved.</li>
+            </ul>
+            <div class="notice"><p><strong>Synthetic conclusion:</strong> the fictional route blocker is repaired within the stated boundary. This sample does not claim a real customer, deployment, revenue or conversion result.</p></div>
+            <div class="actions"><a class="button" href="mailto:niyampaneru79@gmail.com?subject=Web%20App%20Launch-Blocker%20Sprint&amp;body=Route%20or%20feature%3A%0A%0AVisible%20symptom%3A%0A%0AReproduction%20steps%3A%0A%0AFramework%20and%20deployment%20target%3A%0A%0AAcceptance%20criteria%3A">Ask about a web-app repair</a><a class="button button-secondary" href="index.html#services">Back to services</a></div>
+          </section>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container footer-grid"><div><h2>Niyam Paneru</h2><p>Focused, tested repair and implementation sprints for web apps, APIs, deployments and automations.</p><p class="small">This report is a synthetic demonstration.</p></div><nav class="footer-links" aria-label="Footer navigation"><a href="index.html#services">Services</a><a href="index.html#proof">Proof &amp; samples</a><a href="case-study-dentsignal.html">Case study</a><a href="voice-agent-qa.html">Specialist Voice QA</a><a href="index.html#boundaries">Boundaries</a><a href="mailto:niyampaneru79@gmail.com">Email</a></nav></div>
+    </footer>
+  </body>
+</html>
