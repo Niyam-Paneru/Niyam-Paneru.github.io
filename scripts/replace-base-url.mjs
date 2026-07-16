@@ -4,7 +4,8 @@ import { readdir, readFile, writeFile } from "node:fs/promises";
 import { extname, join, relative } from "node:path";
 import process from "node:process";
 
-const sourceBase = "https://niyam-paneru.github.io";
+const sourceBase = ["https://niyam-paneru", "github", "io"].join(".");
+const usernamePlaceholder = ["SECOND", "USERNAME"].join("_");
 const dormantTrigger = "on:\n  workflow_dispatch:\n  # SECOND_ACCOUNT_PUSH_TRIGGER";
 const activeTrigger = "on:\n  push:\n    branches: [\"main\"]\n  workflow_dispatch:";
 const username = process.argv[2];
@@ -31,8 +32,8 @@ function usage(message) {
 }
 
 if (!username) usage("A GitHub username is required.");
-if (username === "SECOND_USERNAME") {
-  usage("Replace the SECOND_USERNAME placeholder with the real second-account username.");
+if (username === usernamePlaceholder) {
+  usage("Replace the example placeholder with the real second-account username.");
 }
 if (!/^[a-z\d](?:[a-z\d-]{0,37}[a-z\d])?$/i.test(username)) {
   usage("The username must use GitHub's letters, digits and single-hyphen format.");
@@ -45,6 +46,7 @@ const targetBase = `https://${username.toLowerCase()}.github.io`;
 const root = process.cwd();
 const changed = [];
 let replacementCount = 0;
+let placeholderCount = 0;
 let workflowActivation = false;
 
 async function walk(directory) {
@@ -60,12 +62,17 @@ async function walk(directory) {
 
     const original = await readFile(path, "utf8");
     const matches = original.split(sourceBase).length - 1;
-    if (matches === 0) continue;
+    const placeholders = original.split(usernamePlaceholder).length - 1;
+    if (matches === 0 && placeholders === 0) continue;
 
     replacementCount += matches;
-    changed.push({ file: relative(root, path), matches });
+    placeholderCount += placeholders;
+    changed.push({ file: relative(root, path), matches, placeholders });
     if (!checkOnly) {
-      await writeFile(path, original.split(sourceBase).join(targetBase), "utf8");
+      const updated = original
+        .split(sourceBase).join(targetBase)
+        .split(usernamePlaceholder).join(username);
+      await writeFile(path, updated, "utf8");
     }
   }
 }
@@ -90,14 +97,15 @@ const workflowMode = workflowActivation
     : "activated"
   : "already active";
 for (const item of changed) {
-  console.log(`${mode}: ${item.file} (${item.matches})`);
+  console.log(`${mode}: ${item.file} (${item.matches} URL, ${item.placeholders} placeholder)`);
 }
 console.log(`${mode} ${replacementCount} URL occurrence(s) in ${changed.length} file(s).`);
+console.log(`${mode} ${placeholderCount} username placeholder occurrence(s).`);
 console.log(`source: ${sourceBase}`);
 console.log(`target: ${targetBase}`);
 console.log(`${workflowMode}: second-account main-branch Pages trigger`);
 
-if (replacementCount === 0) {
-  console.error("No source base URLs were found. Confirm the command is running at the repository root.");
+if (replacementCount === 0 && placeholderCount === 0) {
+  console.error("No source URLs or username placeholders were found. Confirm the command is running at the repository root.");
   process.exitCode = 2;
 }
