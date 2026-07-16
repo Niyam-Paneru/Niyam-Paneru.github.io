@@ -2,7 +2,7 @@
 
 This package copies the reviewed static service site to a second personal GitHub account without changing DentSignal, DNS, Vercel, Azure or the locked account's Pages settings.
 
-Replace every literal `SECOND_USERNAME` below with the exact second-account username. Do not guess it. GitHub usernames cannot contain underscores, so the placeholder itself is not a valid final value.
+Pass the exact second-account username to the replacement script; do not guess it. The script replaces both the old service-site origin and every username placeholder in this packet. GitHub usernames cannot contain underscores, so the example placeholder is not a valid final value.
 
 ## Important access limitation
 
@@ -88,7 +88,7 @@ Expected before editing: branch `main`, no uncommitted files.
 
 ## 4. Replace and verify the public base URL
 
-First preview the exact replacements:
+First preview the exact URL, username-placeholder and workflow-trigger replacements:
 
 ```bash
 node scripts/replace-base-url.mjs SECOND_USERNAME --check
@@ -112,7 +112,8 @@ rg -n "dentsignal\.me" .
 
 Expected:
 
-- the first `rg` command returns no old service-site base URL in public HTML or the README (the replacement script deliberately retains its source constant so it can be audited);
+- the first `rg` command returns no old service-site base URL in public HTML or the README;
+- `rg -n "SECOND_USERNAME" .` returns no matches after the replacement;
 - the second returns only the documented DentSignal separation/case-study references;
 - no `CNAME` file exists;
 - `.github/workflows/pages.yml` changes from manual-only to `main` push plus manual dispatch;
