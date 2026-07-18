@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <title>CSV Rescue | Browser-local data cleanup demo</title>
+    <meta name="description" content="Repair a synthetic CSV locally: detect import blockers, apply safe normalization, review warnings, and download the cleaned file.">
+    <link rel="canonical" href="https://niyam-paneru.github.io/csv-rescue.html">
+    <meta property="og:title" content="CSV Rescue | Browser-local data cleanup demo">
+    <meta property="og:description" content="A working concept demo for safe, browser-local CSV cleanup.">
+    <meta property="og:url" content="https://niyam-paneru.github.io/csv-rescue.html">
+    <meta property="og:type" content="website">
+    <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="assets/styles.css">
+    <script src="assets/script.js" defer></script>
+    <script src="assets/csv-rescue.js" type="module"></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to the demo</a>
+    <header class="site-header" data-header>
+      <a class="wordmark" href="index.html" aria-label="Niyam Paneru, home">NP<span> / repair</span></a>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav" data-nav-toggle>Menu</button>
+      <nav class="site-nav" id="site-nav" aria-label="Primary navigation" data-nav>
+        <a href="index.html#work">Work</a>
+        <a href="index.html#offers">Offers</a>
+        <a href="index.html#contact">Contact</a>
+        <a class="nav-action" href="mailto:niyampaneru79@gmail.com?subject=Software%20bug%20to%20fix">Send the bug</a>
+      </nav>
+    </header>
+
+    <main id="main" data-csv-rescue>
+      <section class="project-intro project-intro--csv">
+        <div class="project-intro__copy">
+          <p class="eyebrow">Concept demo · Runs in your browser</p>
+          <h1>Turn a fragile export into an import you can inspect.</h1>
+          <p>Quoted fields stay intact. Safe fixes are automatic. Ambiguous values stay visible for review.</p>
+        </div>
+        <dl class="project-facts" aria-label="Demo boundaries">
+          <div><dt>Input</dt><dd>CSV text or local file</dd></div>
+          <div><dt>Limit</dt><dd>512 KiB</dd></div>
+          <div><dt>Privacy</dt><dd>No upload or storage</dd></div>
+        </dl>
+      </section>
+
+      <section class="demo-shell" aria-labelledby="workbench-title">
+        <div class="demo-shell__heading">
+          <div>
+            <p class="eyebrow">01 / Workbench</p>
+            <h2 id="workbench-title">Find the rows that will break an import.</h2>
+          </div>
+          <p>All processing stays in this tab.</p>
+        </div>
+
+        <div class="input-panel">
+          <label for="csv-input">CSV input</label>
+          <textarea id="csv-input" data-csv-input spellcheck="false" placeholder="name,email,date&#10;Ada,ada@example.com,2026-07-02"></textarea>
+          <div class="control-row">
+            <button class="button button--quiet" type="button" data-action="load-sample">Load synthetic sample</button>
+            <label class="file-control" for="csv-file">Choose local CSV</label>
+            <input id="csv-file" data-csv-file type="file" accept=".csv,text/csv">
+            <button class="button button--primary" type="button" data-action="repair">Repair CSV</button>
+          </div>
+          <p class="status-line" data-status role="status" aria-live="polite">Paste a CSV or load the sample. Nothing leaves your browser.</p>
+        </div>
+
+        <div class="results-panel" data-results hidden>
+          <div class="metric-strip" aria-label="Cleanup summary">
+            <div><span data-metric="rowsIn">0</span><small>Rows in</small></div>
+            <div><span data-metric="rowsOut">0</span><small>Rows out</small></div>
+            <div><span data-metric="fixesApplied">0</span><small>Safe fixes</small></div>
+            <div><span data-metric="warnings">0</span><small>Review flags</small></div>
+          </div>
+
+          <div class="issue-layout">
+            <div>
+              <p class="eyebrow">02 / Issue trail</p>
+              <h3>Every change has a reason.</h3>
+            </div>
+            <ol class="issue-list" data-issues></ol>
+          </div>
+
+          <div class="comparison-grid">
+            <section aria-labelledby="before-title">
+              <p class="eyebrow">Before</p>
+              <h3 id="before-title">Source rows</h3>
+              <div class="table-scroll" data-before-table></div>
+            </section>
+            <section aria-labelledby="after-title">
+              <p class="eyebrow">After</p>
+              <h3 id="after-title">Cleaned rows</h3>
+              <div class="table-scroll" data-after-table></div>
+            </section>
+          </div>
+
+          <div class="output-panel">
+            <div>
+              <label for="clean-output">Cleaned CSV</label>
+              <p>Selectable even when a browser blocks the download.</p>
+            </div>
+            <textarea id="clean-output" data-clean-output readonly></textarea>
+            <a class="button button--primary" data-download aria-disabled="true" download="csv-rescue-cleaned.csv">Download cleaned CSV</a>
+          </div>
+        </div>
+      </section>
+
+      <section class="case-sequence" aria-labelledby="sequence-title">
+        <p class="eyebrow">Problem → diagnosis → fix → result</p>
+        <h2 id="sequence-title">A bounded repair, not a black box.</h2>
+        <ol>
+          <li><span>Problem</span><strong>Exports hide inconsistent fields until import time.</strong></li>
+          <li><span>Diagnosis</span><strong>Parser errors, warnings, and exact row locations stay visible.</strong></li>
+          <li><span>Fix</span><strong>Only whitespace, email casing, ISO padding, and exact duplicates change.</strong></li>
+          <li><span>Result</span><strong>A cleaned file plus the issues that still need a human decision.</strong></li>
+        </ol>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <p>Need a messy export repaired for a real import?</p>
+      <a href="mailto:niyampaneru79@gmail.com?subject=CSV%20cleanup%20request">Send the CSV problem</a>
+    </footer>
+  </body>
+</html>

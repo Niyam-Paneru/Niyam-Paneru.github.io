@@ -269,3 +269,153 @@ export function cleanCsv(input, { requiredHeaders = [] } = {}) {
     csv: serializeCsv(parsed.headers, rows),
   };
 }
+
+const SAMPLE_CSV = `name,email,date,plan
+ Ada Lovelace ,ADA@EXAMPLE.COM,2026-7-2,Growth
+Ada Lovelace,ada@example.com,2026-07-02,Growth
+Grace Hopper,grace.example.com,07/08/2026,Starter
+,linus@example.com,2026-07-05,Starter`;
+
+function renderTable(target, headers, rows) {
+  target.replaceChildren();
+  const table = target.ownerDocument.createElement("table");
+  const head = table.createTHead().insertRow();
+  for (const header of headers) {
+    const cell = target.ownerDocument.createElement("th");
+    cell.scope = "col";
+    cell.textContent = header;
+    head.append(cell);
+  }
+
+  const body = table.createTBody();
+  for (const row of rows.slice(0, 8)) {
+    const tableRow = body.insertRow();
+    for (const header of headers) {
+      const cell = tableRow.insertCell();
+      cell.dataset.label = header;
+      cell.textContent = row[header] ?? "";
+    }
+  }
+  target.append(table);
+}
+
+function announce(status, message, tone = "neutral") {
+  status.textContent = message;
+  status.dataset.tone = tone;
+}
+
+export function initCsvRescue(root = document) {
+  const app = root.querySelector("[data-csv-rescue]");
+  if (!app) return null;
+
+  const input = app.querySelector("[data-csv-input]");
+  const fileInput = app.querySelector("[data-csv-file]");
+  const loadSample = app.querySelector('[data-action="load-sample"]');
+  const repair = app.querySelector('[data-action="repair"]');
+  const download = app.querySelector("[data-download]");
+  const status = app.querySelector("[data-status]");
+  const results = app.querySelector("[data-results]");
+  const output = app.querySelector("[data-clean-output]");
+  const issueList = app.querySelector("[data-issues]");
+  const beforeTable = app.querySelector("[data-before-table]");
+  const afterTable = app.querySelector("[data-after-table]");
+  const metrics = Object.fromEntries(
+    [...app.querySelectorAll("[data-metric]")].map((element) => [element.dataset.metric, element]),
+  );
+  let objectUrl = "";
+
+  const clearDownload = () => {
+    if (objectUrl) URL.revokeObjectURL(objectUrl);
+    objectUrl = "";
+    download.removeAttribute("href");
+    download.setAttribute("aria-disabled", "true");
+  };
+
+  const runRepair = () => {
+    clearDownload();
+    results.hidden = true;
+    try {
+      const parsed = parseCsv(input.value);
+      const cleaned = cleanCsv(input.value, { requiredHeaders: ["name", "email"] });
+      const beforeRows = parsed.rows.map((row) =>
+        Object.fromEntries(parsed.headers.map((header, index) => [header, row.values[index]])),
+      );
+
+      renderTable(beforeTable, parsed.headers, beforeRows);
+      renderTable(afterTable, cleaned.headers, cleaned.rows);
+      output.value = cleaned.csv;
+      metrics.rowsIn.textContent = String(cleaned.metrics.rowsIn);
+      metrics.rowsOut.textContent = String(cleaned.metrics.rowsOut);
+      metrics.fixesApplied.textContent = String(cleaned.metrics.fixesApplied);
+      metrics.warnings.textContent = String(cleaned.metrics.warnings);
+
+      issueList.replaceChildren();
+      for (const item of cleaned.issues) {
+        const listItem = root.createElement("li");
+        listItem.dataset.severity = item.severity;
+        const location = item.column
+          ? `Row ${item.row}, ${item.column}`
+          : `Row ${item.row}`;
+        const label = item.severity === "warning" ? "Review" : "Fixed";
+        listItem.innerHTML = `<strong>${label}</strong><span></span>`;
+        listItem.querySelector("span").textContent = `${location}: ${item.message}`;
+        issueList.append(listItem);
+      }
+
+      if (!cleaned.issues.length) {
+        const listItem = root.createElement("li");
+        listItem.textContent = "No safe fixes or review warnings detected.";
+        issueList.append(listItem);
+      }
+
+      results.hidden = false;
+      try {
+        objectUrl = URL.createObjectURL(new Blob([cleaned.csv], { type: "text/csv;charset=utf-8" }));
+        download.href = objectUrl;
+        download.setAttribute("aria-disabled", "false");
+        announce(
+          status,
+          `Repair complete. ${cleaned.metrics.rowsOut} cleaned rows are ready to review.`,
+          cleaned.metrics.warnings ? "warning" : "success",
+        );
+      } catch {
+        announce(
+          status,
+          "The cleaned CSV is ready below, but this browser could not create a download. Copy the output instead.",
+          "warning",
+        );
+      }
+    } catch (error) {
+      announce(status, error.message, "error");
+      input.focus();
+    }
+  };
+
+  loadSample.addEventListener("click", () => {
+    input.value = SAMPLE_CSV;
+    announce(status, "Synthetic sample loaded. Repair it to see the issue trail.");
+    input.focus();
+  });
+  repair.addEventListener("click", runRepair);
+  fileInput.addEventListener("change", async () => {
+    const [file] = fileInput.files;
+    if (!file) return;
+    if (file.size > MAX_INPUT_BYTES) {
+      announce(
+        status,
+        "That file exceeds the 512 KiB local-processing limit. Split it into a smaller file and try again.",
+        "error",
+      );
+      return;
+    }
+    input.value = await file.text();
+    announce(status, `${file.name} loaded locally. Nothing has been uploaded.`);
+  });
+  download.addEventListener("click", (event) => {
+    if (!objectUrl) event.preventDefault();
+  });
+
+  return { runRepair };
+}
+
+if (typeof document !== "undefined") initCsvRescue(document);
