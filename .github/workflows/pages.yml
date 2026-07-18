@@ -24,10 +24,18 @@ jobs:
         uses: actions/checkout@v4
         with:
           persist-credentials: false
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - name: Install test dependencies
+        run: npm ci
       - name: Validate site
         run: |
-          node scripts/check-site.mjs
-          node --check assets/script.js
+          npm run test:unit
+          npm run check:site
+          npm run check:syntax
       - name: Configure Pages
         uses: actions/configure-pages@v5
       - name: Upload static site

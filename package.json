@@ -9,5 +9,8 @@
     "check:syntax": "node --check assets/script.js && node --check assets/csv-rescue.js && node --check assets/webhook-lab.js",
     "test:browser": "node tests/browser-smoke.mjs",
     "check": "npm run test:unit && npm run check:site && npm run check:syntax"
+  },
+  "devDependencies": {
+    "playwright": "^1.61.1"
   }
 }
