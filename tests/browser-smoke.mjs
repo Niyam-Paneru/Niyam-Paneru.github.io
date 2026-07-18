@@ -63,8 +63,9 @@ async function assertNoOverflow(page, label) {
   assert.equal(dimensions.scrollWidth, dimensions.clientWidth, `${label} has horizontal overflow`);
 }
 
-const server = staticServer();
-const baseUrl = await listen(server);
+const requestedBaseUrl = process.env.PORTFOLIO_BASE_URL?.replace(/\/+$/, "");
+const server = requestedBaseUrl ? null : staticServer();
+const baseUrl = requestedBaseUrl ?? (await listen(server));
 let browser;
 
 try {
@@ -157,8 +158,10 @@ try {
   assert.deepEqual(caseErrors, []);
   await casePage.close();
 
-  console.log("Browser smoke passed: desktop, mobile, CSV, webhook, download, and DentSignal truth boundary.");
+  console.log(
+    `Browser smoke passed at ${baseUrl}: desktop, mobile, CSV, webhook, download, and DentSignal truth boundary.`,
+  );
 } finally {
   if (browser) await browser.close();
-  await close(server);
+  if (server) await close(server);
 }
