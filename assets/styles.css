@@ -1015,6 +1015,8 @@ td:last-child {
 /* DentSignal case */
 .case-proof {
   overflow: hidden;
+  width: min(100% - 2rem, var(--content));
+  margin: var(--space-4xl) auto 0;
   border: 1px solid var(--ink);
   background: var(--paper-deep);
   box-shadow: var(--shadow-screen);

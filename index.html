@@ -1,312 +1,144 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Niyam Paneru — Web App, API &amp; Automation Repair</title>
-    <meta name="description" content="Focused, tested repair and implementation sprints for web apps, APIs, deployments and automations.">
-    <meta name="author" content="Niyam Paneru">
-    <meta name="theme-color" content="#101b2d">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <title>Niyam Paneru | Software repair and launch support</title>
+    <meta name="description" content="Bounded React, API, deployment, CSV, and webhook repairs with working proof you can inspect.">
     <link rel="canonical" href="https://niyam-paneru.github.io/">
+    <meta property="og:title" content="I make broken software shippable.">
+    <meta property="og:description" content="Working proof for bounded React, API, deployment, CSV, and webhook repairs.">
+    <meta property="og:url" content="https://niyam-paneru.github.io/">
+    <meta property="og:type" content="website">
     <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
     <link rel="stylesheet" href="assets/styles.css">
-    <meta property="og:type" content="website">
-    <meta property="og:title" content="Niyam Paneru — Web App, API &amp; Automation Repair">
-    <meta property="og:description" content="One defined engineering blocker, repaired with tested evidence and a clear handoff.">
-    <meta property="og:url" content="https://niyam-paneru.github.io/">
-    <meta property="og:image" content="https://niyam-paneru.github.io/assets/social-preview.png">
-    <meta property="og:image:type" content="image/png">
-    <meta property="og:image:width" content="1200">
-    <meta property="og:image:height" content="630">
-    <meta property="og:image:alt" content="Niyam Paneru — Reproduce it. Repair it. Prove the fix.">
-    <meta name="twitter:card" content="summary_large_image">
     <script src="assets/script.js" defer></script>
   </head>
   <body>
-    <a class="skip-link" href="#main">Skip to main content</a>
-    <header class="site-header">
-      <div class="nav-wrap">
-        <a class="brand" href="index.html" aria-label="Niyam Paneru home">
-          <span class="brand-mark" aria-hidden="true">NP</span>
-          <span>Niyam Paneru</span>
-        </a>
-        <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-navigation" data-nav-toggle>Menu</button>
-        <nav class="site-nav" id="site-navigation" aria-label="Primary navigation" data-navigation>
-          <ul>
-            <li><a href="#services">Services</a></li>
-            <li><a href="#proof">Proof &amp; samples</a></li>
-            <li><a href="#process">Process</a></li>
-            <li><a href="#boundaries">Boundaries</a></li>
-            <li><a href="#contact">Contact</a></li>
-          </ul>
-        </nav>
-      </div>
+    <a class="skip-link" href="#main">Skip to the work</a>
+    <header class="site-header" data-header>
+      <a class="wordmark" href="index.html" aria-label="Niyam Paneru, home">NP<span> / repair</span></a>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav" data-nav-toggle>Menu</button>
+      <nav class="site-nav" id="site-nav" aria-label="Primary navigation" data-nav>
+        <a href="#work">Work</a>
+        <a href="#offers">Offers</a>
+        <a href="#contact">Contact</a>
+        <a class="nav-action" href="mailto:niyampaneru79@gmail.com?subject=Software%20bug%20to%20fix&amp;body=What%20is%20broken%3F%0AWhat%20should%20happen%3F%0AWhat%20have%20you%20already%20tried%3F">Send the bug</a>
+      </nav>
     </header>
 
     <main id="main">
-      <section class="hero">
-        <div class="container hero-grid">
+      <section class="home-hero" aria-labelledby="hero-title">
+        <div class="home-hero__copy">
+          <p class="eyebrow">Bounded software repair</p>
+          <h1 id="hero-title">I make broken software shippable.</h1>
+          <p class="home-hero__lead">React, APIs, deployments, CSVs, and webhooks—diagnosed and shipped without the theatre.</p>
+          <div class="hero-actions">
+            <a class="button button--primary" href="mailto:niyampaneru79@gmail.com?subject=Software%20bug%20to%20fix&amp;body=What%20is%20broken%3F%0AWhat%20should%20happen%3F%0AWhat%20have%20you%20already%20tried%3F">Send the bug</a>
+            <a class="button button--quiet" href="#work">See the work</a>
+          </div>
+        </div>
+
+        <div class="hero-stage" aria-label="Three working software interfaces">
+          <a class="proof-screen proof-screen--dentsignal" href="case-study-dentsignal.html">
+            <img src="assets/proof/dentsignal-dashboard-desktop.png" alt="DentSignal operator dashboard using synthetic demo data">
+            <span class="screen-label">Product build · Tested</span>
+          </a>
+          <a class="proof-screen proof-screen--webhook" href="webhook-lab.html">
+            <img src="assets/proof/webhook-lab-desktop.png" alt="Webhook Lab showing a deterministic retry timeline">
+            <span class="screen-label">Concept demo · Live</span>
+          </a>
+          <a class="proof-screen proof-screen--csv" href="csv-rescue.html">
+            <img src="assets/proof/csv-rescue-desktop.png" alt="CSV Rescue showing issue counts and cleaned rows">
+            <span class="screen-label">Concept demo · Live</span>
+          </a>
+        </div>
+      </section>
+
+      <section class="proof-index" id="work" aria-labelledby="work-title">
+        <div class="section-heading">
           <div>
-            <p class="eyebrow">Web apps · APIs · deployments · automations</p>
-            <h1>One technical blocker, repaired and returned with proof.</h1>
-            <p class="lede">I reproduce and repair defined React, Next.js, FastAPI, Node, deployment, webhook and automation problems for small SaaS teams and agencies. You receive the patch, focused test evidence, remaining risks and handoff notes.</p>
-            <div class="actions">
-              <a class="button" href="mailto:niyampaneru79@gmail.com?subject=Technical%20repair%20request&amp;body=What%20is%20broken%3F%0A%0AWhat%20should%20happen%20instead%3F%0A%0AExact%20error%20or%20reproduction%20steps%3A%0A%0AStack%20or%20workflow%20platform%3A%0A%0ARepository%20or%20workflow%20link%20(no%20secrets)%3A%0A%0AEnvironment%3A%0A%0ADeadline%3A%0A%0AAcceptance%20criteria%3A">Email the blocker</a>
-              <a class="button button-secondary" href="#services">Compare fixed-scope offers</a>
-            </div>
+            <p class="eyebrow">Selected work / 03</p>
+            <h2 id="work-title">Proof before promises.</h2>
           </div>
-          <aside class="hero-note" aria-label="What to expect">
-            <p class="eyebrow">A bounded first step</p>
-            <p><strong>One written problem. One funded milestone. Evidence at handoff.</strong></p>
-            <p>I confirm scope, price, acceptance criteria and least-privilege access before work starts. If diagnosis exposes a larger problem, I stop and quote the additional work.</p>
-          </aside>
+          <p>One product interface and two working tools. Every label tells you what is real.</p>
         </div>
-      </section>
 
-      <section class="section" id="services">
-        <div class="container">
-          <div class="section-heading">
+        <article class="proof-band">
+          <div class="proof-band__copy">
             <div>
-              <p class="eyebrow">Five primary service lanes</p>
-              <h2>Buy the smallest useful repair or build.</h2>
-            </div>
-            <p>Prices cover a defined entry milestone—not an entire product or unlimited development. The exact boundary and acceptance check are written before funding.</p>
-          </div>
-          <div class="cards service-cards">
-            <article class="card card-featured" id="quick-fix">
-              <span class="tag">Smallest issue</span>
-              <h3>Quick Technical Fix</h3>
-              <p>For one specific FastAPI, Node, React or Next.js defect; failed build; deployment configuration issue; API or webhook mapping fault; authentication problem; responsive UI defect; small script; or bounded n8n/Make correction.</p>
-              <ul>
-                <li>One issue, repository or workflow, and environment</li>
-                <li>One focused patch and acceptance check</li>
-                <li>Short cause, verification and handoff note</li>
-              </ul>
-              <p class="price">US$20–75</p>
-              <p class="duration">Normally 30–90 minutes · funded milestone first</p>
-            </article>
-
-            <article class="card">
-              <span class="tag">Frontend &amp; launch</span>
-              <h3>Web App Launch-Blocker Sprint</h3>
-              <p>For one React or Next.js blocker, frontend/backend integration fault, authentication or database issue, failed build, or Vercel/deployment failure.</p>
-              <ul>
-                <li>Reproduction and code-level repair</li>
-                <li>Mobile and nearby regression checks</li>
-                <li>Preview/staging or build verification</li>
-              </ul>
-              <a href="sample-web-app-launch-blocker.html">See the synthetic repair report</a>
-              <p class="price">Starting at US$125</p>
-              <p class="duration">One blocking defect · normally 1–3 working days</p>
-            </article>
-
-            <article class="card">
-              <span class="tag">Backend</span>
-              <h3>API &amp; Backend Repair Sprint</h3>
-              <p>For one FastAPI or Node/Express endpoint group involving REST behavior, authentication, validation, webhooks, database writes, transactions, retries or error handling.</p>
-              <ul>
-                <li>Failing request reproduced</li>
-                <li>Patch plus unit/integration checks</li>
-                <li>Success and failure-path evidence</li>
-              </ul>
-              <a href="sample-fastapi-api-repair.html">See the synthetic API report</a>
-              <p class="price">Starting at US$149</p>
-              <p class="duration">One endpoint group or failure path · normally 1–3 working days</p>
-            </article>
-
-            <article class="card">
-              <span class="tag">Automation</span>
-              <h3>Workflow Reliability Sprint</h3>
-              <p>For one n8n or Make workflow, API integration, duplicate-event problem, retry path, webhook failure, or CRM/database handoff.</p>
-              <ul>
-                <li>Root-cause explanation and repair</li>
-                <li>Idempotency, retry and recovery checks</li>
-                <li>Operator-ready handoff notes</li>
-              </ul>
-              <a href="sample-workflow-reliability.html">See the synthetic workflow report</a>
-              <p class="price">Starting at US$149</p>
-              <p class="duration">One primary failure · normally 1–3 working days</p>
-            </article>
-
-            <article class="card">
-              <span class="tag">Bounded implementation</span>
-              <h3>Small Build Sprint</h3>
-              <p>For one defined integration, endpoint group, internal-dashboard section, small workflow or automation with agreed inputs and acceptance criteria.</p>
-              <ul>
-                <li>Implementation in one agreed environment</li>
-                <li>Happy-path and failure-path checks</li>
-                <li>Concise operator and handoff notes</li>
-              </ul>
-              <a href="#contact">Describe one bounded feature</a>
-              <p class="price">Starting at US$300</p>
-              <p class="duration">Maximum 5 working days</p>
-            </article>
-          </div>
-
-          <aside class="specialist-offer" aria-labelledby="specialist-title">
-            <div>
-              <p class="eyebrow">Secondary specialist service</p>
-              <h3 id="specialist-title">Voice-Agent Integration &amp; Launch QA</h3>
-              <p>For agencies that need a bounded staging review of interruptions, silence, corrections, tools, transfers, human handoff and recovery. Voice QA is a specialist lane, not the main business.</p>
+              <p class="eyebrow">01 · Product build · Synthetic demo data</p>
+              <h3>DentSignal</h3>
+              <p>Fragmented call follow-up became one guarded operator workspace.</p>
             </div>
             <div>
-              <p class="price">25-scenario evidence pack · US$400 proposed validation price</p>
-              <a href="voice-agent-qa.html">Review the specialist scope</a>
+              <p><strong>Real interface. Synthetic demo data.</strong></p>
+              <a href="case-study-dentsignal.html">See problem, system, and boundary</a>
             </div>
-          </aside>
-
-          <div class="notice space-top">
-            <p><strong>Payment boundary:</strong> marketplace work starts with one funded milestone. Direct work is normally 50% to reserve and start, then 50% after delivery of the agreed patch or evidence and before transfer of final unrestricted deliverables. New requirements need a written change order.</p>
           </div>
-        </div>
-      </section>
+          <div class="proof-band__visual">
+            <img src="assets/proof/dentsignal-dashboard-desktop.png" alt="DentSignal dashboard with call, booking, and follow-up controls populated by synthetic demo data" loading="lazy">
+          </div>
+        </article>
 
-      <section class="section section-surface" id="proof">
-        <div class="container">
-          <div class="section-heading">
+        <article class="proof-band proof-band--reverse">
+          <div class="proof-band__copy">
             <div>
-              <p class="eyebrow">Proof &amp; sample deliverables</p>
-              <h2>Repair evidence first. Specialist QA last.</h2>
+              <p class="eyebrow">02 · Concept demo · Runs in your browser</p>
+              <h3>CSV Rescue</h3>
+              <p>A brittle export becomes a cleaned file with every warning still visible.</p>
             </div>
-            <p>Synthetic reports show the format and technical depth of a handoff. They are not customer results. DentSignal appears only as an independent engineering case study.</p>
-          </div>
-
-          <div class="proof-showcase">
-            <article class="card proof-primary">
-              <span class="status">Synthetic demonstration</span>
-              <h3>Web App Launch-Blocker Repair Report</h3>
-              <p>A fictional SaaS checkout blocker with reproduction, browser/build evidence, code-level repair, mobile and deployment checks, regression results, risks and handoff notes.</p>
-              <a href="sample-web-app-launch-blocker.html">Open the HTML report</a>
-              <a href="samples/web-app-launch-blocker-repair-report.md">View Markdown source</a>
-            </article>
-
-            <article class="card proof-primary">
-              <span class="status">Synthetic demonstration</span>
-              <h3>FastAPI/API Debugging &amp; Repair Report</h3>
-              <p>A fictional subscription endpoint failure covering authentication, validation, database transactions, truthful error responses, tests and failure-path evidence.</p>
-              <a href="sample-fastapi-api-repair.html">Open the HTML report</a>
-              <a href="samples/fastapi-api-debugging-repair-report.md">View Markdown source</a>
-            </article>
-
-            <article class="card proof-workflow">
-              <span class="status">Synthetic demonstration</span>
-              <h3>AI Workflow Reliability Report</h3>
-              <p>A fictional webhook-to-CRM repair with idempotency, downstream failure, bounded retry, alerting and recovery evidence.</p>
-              <a href="sample-workflow-reliability.html">Open the HTML report</a>
-              <a href="samples/ai-workflow-reliability-report.md">View Markdown source</a>
-            </article>
-
-            <article class="card proof-case-study">
-              <span class="tag">Independent engineering project</span>
-              <h3>DentSignal — Full-Stack Voice Workflow Engineering Project</h3>
-              <p>Supporting evidence for React/FastAPI architecture, authentication, data models, background jobs, API/webhook handling, escalation paths and deployment work. No clinic customer or commercial outcome is claimed.</p>
-              <a href="case-study-dentsignal.html">Read the sanitized case study</a>
-            </article>
-          </div>
-
-          <aside class="voice-proof-note" aria-labelledby="voice-sample-title">
             <div>
-              <span class="status">Synthetic demonstration · specialist lane</span>
-              <h3 id="voice-sample-title">Voice Agent Launch QA Evidence Pack</h3>
-              <p>A fictional 25-scenario staging review for a home-services agent. It covers interruptions, silence, unsupported claims, tool failures, transfers, recovery and a five-fix retest.</p>
+              <p><strong>Quoted parser. Safe normalization. Local download.</strong></p>
+              <a href="csv-rescue.html">Repair the synthetic CSV</a>
             </div>
-            <div class="actions">
-              <a class="button button-secondary" href="sample-voice-agent-qa.html">View the specialist sample</a>
+          </div>
+          <div class="proof-band__visual">
+            <img src="assets/proof/csv-rescue-desktop.png" alt="CSV Rescue browser tool comparing source rows with safely cleaned output" loading="lazy">
+          </div>
+        </article>
+
+        <article class="proof-band">
+          <div class="proof-band__copy">
+            <div>
+              <p class="eyebrow">03 · Concept demo · Deterministic simulation</p>
+              <h3>Webhook Lab</h3>
+              <p>Duplicate delivery and temporary failures become an explainable retry trail.</p>
             </div>
-          </aside>
-
-          <div class="proof-grid space-top">
-            <article class="proof-item">
-              <h3>Practical implementation stack</h3>
-              <p>React, Next.js, Tailwind CSS, Node.js, Express, Python, FastAPI, REST APIs, JWT, PostgreSQL, SQLite, Supabase, Redis and Celery.</p>
-            </article>
-            <article class="proof-item">
-              <h3>Automation and delivery stack</h3>
-              <p>n8n, browser automation, CSV/data workflows, webhooks, Azure, Vercel, AI-assisted development and evidence-led handoff.</p>
-            </article>
+            <div>
+              <p><strong>JSON validation. Backoff cap. No network request.</strong></p>
+              <a href="webhook-lab.html">Run the retry path</a>
+            </div>
           </div>
-          <div class="callout space-top">
-            <p><strong>Evidence boundary:</strong> DentSignal is an independent engineering project, not client work. No paying clinic, production clinic deployment, healthcare certification, revenue result, conversion improvement or testimonial is claimed. Synthetic reports are fictional and visibly labeled.</p>
+          <div class="proof-band__visual">
+            <img src="assets/proof/webhook-lab-desktop.png" alt="Webhook Lab browser tool showing validation, attempts, wait times, and delivered state" loading="lazy">
           </div>
-        </div>
+        </article>
       </section>
 
-      <section class="section" id="process">
-        <div class="container">
-          <p class="eyebrow">Process</p>
-          <h2>From symptom to tested handoff.</h2>
-          <ol class="numbered">
-            <li><strong>01 · Fit check</strong> You send the symptom, expected behavior, environment, deadline and acceptance criteria—without secrets.</li>
-            <li><strong>02 · Reproduce</strong> I confirm the failure and write a narrow acceptance condition before changing code.</li>
-            <li><strong>03 · Repair &amp; test</strong> I implement the patch, exercise nearby regression and failure paths, and record evidence.</li>
-            <li><strong>04 · Handoff</strong> You receive the patch, test results, remaining risks and concise operating notes.</li>
-          </ol>
-        </div>
+      <section class="offers" id="offers" aria-labelledby="offers-title">
+        <p class="eyebrow">Fixed starting points</p>
+        <h2 id="offers-title">Small enough to decide.</h2>
+        <ol class="offer-list">
+          <li><span>01</span><strong>CSV or data cleanup</strong><b>$35–75</b></li>
+          <li><span>02</span><strong>API or webhook diagnosis</strong><b>$50–125</b></li>
+          <li><span>03</span><strong>React or deployment repair</strong><b>$75–150</b></li>
+        </ol>
+        <p>Final price follows a reproduced issue and one clear acceptance check.</p>
       </section>
 
-      <section class="section section-surface" id="boundaries">
-        <div class="container split">
-          <div>
-            <p class="eyebrow">Scope boundaries</p>
-            <h2>Clear limits protect the result.</h2>
-            <ul class="checklist">
-              <li>One repository, workflow, environment or bounded feature per milestone unless agreed otherwise.</li>
-              <li>Staging, test accounts and least-privilege access are preferred.</li>
-              <li>New requirements, unrelated defects and extra integrations require a change order.</li>
-              <li>Third-party outages, account restrictions and undocumented vendor changes cannot be guaranteed away.</li>
-              <li>Unlimited development, 24/7 support and open-ended revisions are excluded.</li>
-              <li>One correction round covers a mismatch against the written acceptance criteria.</li>
-            </ul>
-          </div>
-          <div>
-            <p class="eyebrow">Safety and access</p>
-            <h3>Access follows diagnosis—not first contact.</h3>
-            <p>I do not accept credentials in an initial message. I will not bypass access controls, test without authorization, use live sensitive data unnecessarily, or make unsupported compliance promises.</p>
-            <p>I first request logs, redacted errors, reproduction steps and a dependency map. If access is needed, it should be time-limited and least-privilege. Production changes require the owner’s explicit approval and rollback plan.</p>
-            <div class="notice"><p><strong>Acceptance first:</strong> work starts only after deliverables, required inputs, price, timeline and acceptance criteria are written and the milestone is funded.</p></div>
-          </div>
+      <section class="contact-band" id="contact" aria-labelledby="contact-title">
+        <div>
+          <p class="eyebrow">One useful email</p>
+          <h2 id="contact-title">Show me where it breaks.</h2>
         </div>
-      </section>
-
-      <section class="section" id="contact">
-        <div class="container narrow">
-          <p class="eyebrow">Start with the blocker</p>
-          <h2>Send the smallest reproducible version of the problem.</h2>
-          <p class="lede">Include what fails, what should happen, the exact error or reproduction steps, stack, environment, deadline and acceptance condition. Do not include passwords, API keys, private customer data or production exports.</p>
-          <div class="actions">
-            <a class="button" href="mailto:niyampaneru79@gmail.com?subject=Technical%20repair%20request&amp;body=What%20is%20broken%3F%0A%0AWhat%20should%20happen%20instead%3F%0A%0AExact%20error%20or%20reproduction%20steps%3A%0A%0AStack%20or%20workflow%20platform%3A%0A%0ARepository%20or%20workflow%20link%20(no%20secrets)%3A%0A%0AEnvironment%3A%0A%0ADeadline%3A%0A%0AAcceptance%20criteria%3A">Email Niyam</a>
-            <a class="button button-secondary" href="https://github.com/Niyam-Paneru" target="_blank" rel="noopener noreferrer">View GitHub profile</a>
-          </div>
-          <p class="small">Based in Nepal · international work in English · <a href="mailto:niyampaneru79@gmail.com">niyampaneru79@gmail.com</a></p>
-        </div>
-      </section>
-
-      <section class="section-tight" id="privacy">
-        <div class="container narrow">
-          <h2 class="compact-heading">Privacy note</h2>
-          <p>This site has no contact form, analytics, cookies or tracking scripts. The email link opens your own mail application. Send only the minimum information needed for a fit check and never include credentials or sensitive customer data in an initial message.</p>
-        </div>
+        <a href="mailto:niyampaneru79@gmail.com?subject=Software%20bug%20to%20fix&amp;body=What%20is%20broken%3F%0AWhat%20should%20happen%3F%0AWhat%20have%20you%20already%20tried%3F">niyampaneru79@gmail.com</a>
       </section>
     </main>
 
     <footer class="site-footer">
-      <div class="container footer-grid">
-        <div>
-          <h2>Niyam Paneru</h2>
-          <p>Focused, tested repair and implementation sprints for web apps, APIs, deployments and automations.</p>
-          <p class="small">Independent engineer · Nepal · International work in English</p>
-        </div>
-        <nav class="footer-links" aria-label="Footer navigation">
-          <a href="#services">Services</a>
-          <a href="#proof">Proof &amp; samples</a>
-          <a href="case-study-dentsignal.html">DentSignal case study</a>
-          <a href="voice-agent-qa.html">Specialist Voice QA</a>
-          <a href="#boundaries">Boundaries</a>
-          <a href="#privacy">Privacy</a>
-          <a href="mailto:niyampaneru79@gmail.com">Email</a>
-          <a href="https://github.com/Niyam-Paneru" target="_blank" rel="noopener noreferrer">GitHub</a>
-        </nav>
-      </div>
+      <p>Niyam Paneru · software repair</p>
+      <p>© <span data-current-year>2026</span></p>
     </footer>
   </body>
 </html>
