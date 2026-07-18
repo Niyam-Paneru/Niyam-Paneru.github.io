@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <title>Webhook Lab | Deterministic retry simulator</title>
+    <meta name="description" content="Validate a synthetic webhook, detect duplicate event IDs, and inspect a deterministic retry timeline without making a network request.">
+    <link rel="canonical" href="https://niyam-paneru.github.io/webhook-lab.html">
+    <meta property="og:title" content="Webhook Lab | Deterministic retry simulator">
+    <meta property="og:description" content="A working concept demo for webhook validation, duplicate detection, and retry reasoning.">
+    <meta property="og:url" content="https://niyam-paneru.github.io/webhook-lab.html">
+    <meta property="og:type" content="website">
+    <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="assets/styles.css">
+    <script src="assets/script.js" defer></script>
+    <script src="assets/webhook-lab.js" type="module"></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to the demo</a>
+    <header class="site-header" data-header>
+      <a class="wordmark" href="index.html" aria-label="Niyam Paneru, home">NP<span> / repair</span></a>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav" data-nav-toggle>Menu</button>
+      <nav class="site-nav" id="site-nav" aria-label="Primary navigation" data-nav>
+        <a href="index.html#work">Work</a>
+        <a href="index.html#offers">Offers</a>
+        <a href="index.html#contact">Contact</a>
+        <a class="nav-action" href="mailto:niyampaneru79@gmail.com?subject=Software%20bug%20to%20fix">Send the bug</a>
+      </nav>
+    </header>
+
+    <main id="main" data-webhook-lab>
+      <section class="project-intro project-intro--webhook">
+        <div class="project-intro__copy">
+          <p class="eyebrow">Concept demo · Deterministic simulation</p>
+          <h1>Make a retry path readable before it becomes an incident.</h1>
+          <p>Validate the payload, spot a duplicate, and see every wait and terminal decision in one view.</p>
+        </div>
+        <dl class="project-facts" aria-label="Demo boundaries">
+          <div><dt>Input</dt><dd>JSON and response statuses</dd></div>
+          <div><dt>State</dt><dd>Session-only event IDs</dd></div>
+          <div><dt>Network</dt><dd>No requests or storage</dd></div>
+        </dl>
+      </section>
+
+      <section class="demo-shell demo-shell--webhook" aria-labelledby="simulator-title">
+        <div class="demo-shell__heading">
+          <div>
+            <p class="eyebrow">01 / Event bench</p>
+            <h2 id="simulator-title">Trace what happens after delivery fails.</h2>
+          </div>
+          <p>No network request. No payload stored.</p>
+        </div>
+
+        <div class="webhook-input-grid">
+          <div class="input-panel">
+            <label for="payload-input">Webhook JSON</label>
+            <textarea id="payload-input" data-payload-input spellcheck="false" placeholder='{"id":"evt_1042","event":"invoice.paid"}'></textarea>
+          </div>
+          <div class="simulation-controls">
+            <label for="status-input">Response sequence</label>
+            <input id="status-input" data-status-input type="text" inputmode="numeric" value="429, 500, 200" aria-describedby="status-help">
+            <p id="status-help">Use 200, 429, or any 500–599 response.</p>
+            <label for="max-attempts">Maximum attempts</label>
+            <input id="max-attempts" data-max-attempts type="number" min="1" max="8" value="4">
+            <div class="control-stack">
+              <button class="button button--quiet" type="button" data-action="load-sample">Load synthetic event</button>
+              <button class="button button--primary button--slate" type="button" data-action="simulate">Run simulation</button>
+            </div>
+          </div>
+        </div>
+        <p class="status-line" data-status role="status" aria-live="polite">Paste JSON or load the sample to begin.</p>
+
+        <div class="webhook-results" data-results hidden>
+          <section class="validation-panel" aria-labelledby="validation-title">
+            <p class="eyebrow">02 / Validation</p>
+            <h3 id="validation-title">Payload boundary</h3>
+            <ul data-validation></ul>
+            <dl>
+              <div><dt>Event ID</dt><dd data-event-id></dd></div>
+              <div><dt>Event</dt><dd data-event-name></dd></div>
+              <div><dt>Payload</dt><dd data-payload-size></dd></div>
+              <div><dt>Session check</dt><dd data-duplicate-state></dd></div>
+            </dl>
+          </section>
+
+          <section class="timeline-panel" aria-labelledby="timeline-title">
+            <p class="eyebrow">03 / Attempt timeline</p>
+            <h3 id="timeline-title">Every retry earns its place.</h3>
+            <ol class="attempt-timeline" data-timeline></ol>
+          </section>
+
+          <section class="outcome-panel" aria-labelledby="outcome-title">
+            <p class="eyebrow">04 / Final state</p>
+            <h3 id="outcome-title" data-outcome>Waiting</h3>
+            <p>A retry limit ends in “Needs attention,” never a false success.</p>
+          </section>
+        </div>
+      </section>
+
+      <section class="case-sequence" aria-labelledby="sequence-title">
+        <p class="eyebrow">Problem → diagnosis → fix → result</p>
+        <h2 id="sequence-title">Reliability logic you can explain.</h2>
+        <ol>
+          <li><span>Problem</span><strong>Raw logs bury duplicates and temporary failures.</strong></li>
+          <li><span>Diagnosis</span><strong>Payload validity, ID history, and responses share one trail.</strong></li>
+          <li><span>Fix</span><strong>Retryable failures receive a capped exponential schedule.</strong></li>
+          <li><span>Result</span><strong>Delivery or manual attention is explicit at the final attempt.</strong></li>
+        </ol>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <p>Have a webhook that retries forever or disappears?</p>
+      <a href="mailto:niyampaneru79@gmail.com?subject=Webhook%20diagnosis%20request">Send the failure path</a>
+    </footer>
+  </body>
+</html>
