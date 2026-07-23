@@ -29,24 +29,79 @@ test("accepts the reviewed source portfolio", () => {
   assert.deepEqual(checkSite(root), []);
 });
 
-test("publishes five sanitized DentSignal engineering case studies with exact evidence links", () => {
+test("publishes five sanitized DentSignal engineering case studies with exact evidence boundaries", () => {
   const cases = [
-    "case-study-deployment-drift.html",
-    "case-study-ci-gate-recovery.html",
-    "case-study-cloud-provider-config.html",
-    "case-study-async-response-ownership.html",
-    "case-study-webhook-token-hardening.html",
+    {
+      name: "case-study-deployment-drift.html",
+      evidence: [
+        ["https://github.com/Niyam-Paneru/dentsignal/pull/228", "5b2b197"],
+        ["https://github.com/Niyam-Paneru/dentsignal/pull/231", "ba03dd4"],
+        ["https://github.com/Niyam-Paneru/dentsignal/pull/232", "11ad47a"],
+        ["https://github.com/Niyam-Paneru/dentsignal/pull/234", "9662eb1"],
+      ],
+      boundary:
+        "DentSignal is not client work. This evidence does not establish continuous availability, present deployment state, or a guarantee against future drift.",
+    },
+    {
+      name: "case-study-ci-gate-recovery.html",
+      evidence: [["https://github.com/Niyam-Paneru/dentsignal/pull/90", "7252c74"]],
+      boundary:
+        "DentSignal is not client work. The merge does not establish present-day CI status, complete product security, or absence of later regressions.",
+    },
+    {
+      name: "case-study-cloud-provider-config.html",
+      evidence: [
+        ["https://github.com/Niyam-Paneru/dentsignal/pull/222", "9191216"],
+        ["https://github.com/Niyam-Paneru/dentsignal/pull/224", "73e4c93"],
+      ],
+      boundary:
+        "DentSignal is not client work. This was not an Azure infrastructure migration and does not claim a real call or present provider behavior.",
+    },
+    {
+      name: "case-study-async-response-ownership.html",
+      evidence: [
+        ["https://github.com/Niyam-Paneru/dentsignal/pull/223", "a4c498e"],
+        ["https://github.com/Niyam-Paneru/dentsignal/pull/225", "ab250dc"],
+        ["https://github.com/Niyam-Paneru/dentsignal/pull/226", "bd5c8e4"],
+      ],
+      boundary:
+        "DentSignal is not client work. This evidence does not establish perfect latency, live-clinic outcomes, or correctness outside the cited paths.",
+    },
+    {
+      name: "case-study-webhook-token-hardening.html",
+      evidence: [
+        ["https://github.com/Niyam-Paneru/dentsignal/pull/122", "e62e439"],
+        ["https://github.com/Niyam-Paneru/dentsignal/pull/210", "e42c611"],
+      ],
+      boundary:
+        "DentSignal is not client work. This evidence is not a compliance certification, external cryptographic review, or guarantee against every replay or authorization bug.",
+    },
   ];
   const home = readFileSync(join(root, "index.html"), "utf8");
 
-  for (const name of cases) {
+  for (const { name, evidence, boundary } of cases) {
     const content = readFileSync(join(root, name), "utf8");
     assert.match(content, /DentSignal engineering case study/);
-    assert.match(content, /PR-reported historical evidence/);
-    assert.match(content, /https:\/\/github\.com\/Niyam-Paneru\/dentsignal\/pull\/\d+/);
+    assert.ok(content.includes("Historical PR-reported validation"), `${name} lacks the exact validation label`);
+    assert.ok(content.includes("DentSignal is not client work"), `${name} lacks the disclosure prefix`);
+    assert.ok(content.includes(boundary), `${name} lacks its complete source claim boundary`);
+    for (const [url, commit] of evidence) {
+      assert.ok(content.includes(url), `${name} lacks ${url}`);
+      assert.ok(content.includes(commit), `${name} lacks ${commit}`);
+    }
     assert.match(content, /This is engineering proof, not customer proof\./);
     assert.match(content, /Rollback/);
     assert.ok(home.includes(`href="${name}"`), `index.html does not link ${name}`);
+  }
+});
+
+test("documents the actual repository owner and public URL", () => {
+  for (const name of ["README.md", "MIGRATION.md"]) {
+    const content = readFileSync(join(root, name), "utf8");
+    assert.ok(content.includes("Niyam-Paneru/Niyam-Paneru.github.io"), `${name} lacks the repository`);
+    assert.ok(content.includes("https://niyam-paneru.github.io/"), `${name} lacks the public URL`);
+    assert.ok(!content.includes("NiyamPaneru"), `${name} contains the old owner`);
+    assert.ok(!content.includes("https://niyampaneru.github.io/"), `${name} contains the old public URL`);
   }
 });
 

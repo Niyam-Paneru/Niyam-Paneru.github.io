@@ -16,7 +16,7 @@ A static sales portfolio for bounded software repair work. The public site conta
 - CSV Rescue and Webhook Lab are fictional brands labeled `Concept demo`.
 - Both tools run entirely in the browser. They make no external request and persist no input.
 - DentSignal evidence comes from a local synthetic fixture and is labeled `Real interface. Synthetic demo data.`
-- Engineering case studies label validation as PR-reported historical evidence and
+- Engineering case studies use the `Historical PR-reported validation` label and
   link only their exact merged DentSignal pull requests.
 - The site has no analytics, cookies, contact backend, external JavaScript, public
   GitHub profile link, testimonial, or commercial outcome claim.
@@ -47,6 +47,6 @@ Then open `http://127.0.0.1:4173/`.
 
 ## Deployment
 
-The intended public repository is `NiyamPaneru/NiyamPaneru.github.io` and the intended URL is `https://niyampaneru.github.io/`. The source branch keeps the old canonical base and a manual-only Pages workflow until the verified tree is migrated.
+The intended public repository is `Niyam-Paneru/Niyam-Paneru.github.io` and the intended URL is `https://niyam-paneru.github.io/`. The source branch keeps the manual-only Pages workflow until the verified tree is migrated.
 
 See [MIGRATION.md](MIGRATION.md) for the exact destination procedure. The migration must not create `CNAME`, transfer `dentsignal.me`, or publish temporary/browser artifacts.
