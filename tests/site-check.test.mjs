@@ -105,6 +105,15 @@ test("documents the actual repository owner and public URL", () => {
   }
 });
 
+test("migration hygiene does not reject the actual public URL", () => {
+  const content = readFileSync(join(root, "MIGRATION.md"), "utf8");
+  assert.ok(
+    !content.includes('rg -n "SECOND_USERNAME|https://niyam-paneru.github.io"'),
+    "MIGRATION.md treats the actual public URL as stale",
+  );
+  assert.ok(content.includes('rg -n "SECOND_USERNAME" .'), "MIGRATION.md lacks its username-token check");
+});
+
 test("rejects public GitHub profile links and unresolved deployment tokens", (context) => {
   const target = fixture();
   context.after(() => rmSync(target, { recursive: true, force: true }));

@@ -75,12 +75,12 @@ The first command previews canonical URL handling and the workflow activation. R
 Verify migration hygiene:
 
 ```powershell
-rg -n "SECOND_USERNAME|https://niyam-paneru.github.io" . -g "!.git/**" -g "!node_modules/**"
+rg -n "SECOND_USERNAME" . -g "*.html" -g "*.js" -g "*.json" -g "*.md" -g "*.svg" -g "*.yml" -g "!MIGRATION.md" -g "!.git/**" -g "!node_modules/**"
 Test-Path CNAME
 git diff --check
 ```
 
-Expected: no stale URL or username-token matches, no `CNAME`, and no whitespace errors.
+Expected: no unresolved username-token matches, no `CNAME`, and no whitespace errors.
 
 ## 5. Re-run the full destination gate
 
