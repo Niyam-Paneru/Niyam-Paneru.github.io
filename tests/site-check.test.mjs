@@ -111,7 +111,11 @@ test("migration hygiene does not reject the actual public URL", () => {
     !content.includes('rg -n "SECOND_USERNAME|https://niyam-paneru.github.io"'),
     "MIGRATION.md treats the actual public URL as stale",
   );
-  assert.ok(content.includes('rg -n "SECOND_USERNAME" .'), "MIGRATION.md lacks its username-token check");
+  assert.ok(!content.includes("SECOND_USERNAME"), "MIGRATION.md exposes its username-token check to the helper");
+  assert.ok(
+    content.includes('rg -n "SECOND[_]USERNAME" .'),
+    "MIGRATION.md lacks its helper-safe username-token check",
+  );
 });
 
 test("rejects public GitHub profile links and unresolved deployment tokens", (context) => {

@@ -75,7 +75,7 @@ The first command previews canonical URL handling and the workflow activation. R
 Verify migration hygiene:
 
 ```powershell
-rg -n "SECOND_USERNAME" . -g "*.html" -g "*.js" -g "*.json" -g "*.md" -g "*.svg" -g "*.yml" -g "!MIGRATION.md" -g "!.git/**" -g "!node_modules/**"
+rg -n "SECOND[_]USERNAME" . -g "*.html" -g "*.js" -g "*.json" -g "*.md" -g "*.svg" -g "*.yml" -g "!MIGRATION.md" -g "!.git/**" -g "!node_modules/**"
 Test-Path CNAME
 git diff --check
 ```
