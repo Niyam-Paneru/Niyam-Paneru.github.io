@@ -28,9 +28,9 @@ Required evidence:
 
 - branch is `codex/premium-proof-portfolio`;
 - worktree is clean;
-- 27 unit/static tests pass;
+- 28 unit/static tests pass;
 - browser smoke passes;
-- site checker reports five HTML pages;
+- site checker reports ten HTML pages;
 - no whitespace errors.
 
 ## 2. Verify the destination before copying
@@ -114,7 +114,7 @@ Open `https://niyampaneru.github.io/` in a fresh browser context and verify:
 - title is `Niyam Paneru | Software repair and launch support`;
 - all local assets return successfully;
 - Work, Offers, Contact, and `Send the bug` work;
-- all three project links open;
+- all eight proof links open;
 - CSV sample, repair, error, and download paths work;
 - Webhook delivered, duplicate, invalid JSON, and exhausted-retry paths work;
 - DentSignal caption remains visible;

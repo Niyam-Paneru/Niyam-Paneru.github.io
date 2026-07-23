@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <title>Webhook and token hardening case study | DentSignal engineering proof</title>
+    <meta name="description" content="A FastAPI case study covering retry-safe webhook identity and purpose-scoped callback tokens.">
+    <link rel="canonical" href="https://niyam-paneru.github.io/case-study-webhook-token-hardening.html">
+    <meta property="og:title" content="Webhook and token hardening case study | DentSignal engineering proof">
+    <meta property="og:description" content="Retry-safe events and separate callback and WebSocket trust windows, linked to exact merged revisions.">
+    <meta property="og:url" content="https://niyam-paneru.github.io/case-study-webhook-token-hardening.html">
+    <meta property="og:type" content="website">
+    <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="assets/styles.css">
+    <script src="assets/script.js" defer></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to the case study</a>
+    <header class="site-header" data-header>
+      <a class="wordmark" href="index.html" aria-label="Niyam Paneru, home">NP<span> / repair</span></a>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav" data-nav-toggle>Menu</button>
+      <nav class="site-nav" id="site-nav" aria-label="Primary navigation" data-nav>
+        <a href="index.html#work">Work</a><a href="index.html#offers">Offers</a><a href="index.html#contact">Contact</a>
+        <a class="nav-action" href="mailto:niyampaneru79@gmail.com?subject=Webhook%20repair%20request">Send the callback</a>
+      </nav>
+    </header>
+
+    <main id="main">
+      <section class="case-hero">
+        <div class="case-hero__copy">
+          <p class="eyebrow">DentSignal engineering case study · FastAPI / webhooks</p>
+          <h1>Retries needed identity. Callbacks needed their own clock.</h1>
+          <p>Missing provider event IDs weakened deduplication, while one short authentication lifetime could not safely serve both immediate admission and delayed callbacks.</p>
+        </div>
+        <dl class="project-facts" aria-label="Case study facts">
+          <div><dt>Area</dt><dd>FastAPI, HMAC, webhooks, idempotency</dd></div>
+          <div><dt>Evidence</dt><dd>PR-reported historical evidence</dd></div>
+          <div><dt>Boundary</dt><dd>No keys, payloads, or compliance claim</dd></div>
+        </dl>
+      </section>
+
+      <section class="case-section" aria-labelledby="webhook-problem">
+        <div><p class="eyebrow">01 / Problem</p><h2 id="webhook-problem">One trust window served two different risks.</h2></div>
+        <div class="case-section__body">
+          <p>Provider events without IDs could evade ordinary deduplication. Delayed callbacks outlived the short WebSocket-admission window, but simply extending that window would widen replay exposure.</p>
+          <p><strong>Root cause:</strong> event identity and token purpose were not modeled precisely enough.</p>
+        </div>
+      </section>
+
+      <section class="case-section" aria-labelledby="webhook-repair">
+        <div><p class="eyebrow">02 / Repair</p><h2 id="webhook-repair">Bind identity and lifetime to purpose.</h2></div>
+        <div class="case-section__body">
+          <ul>
+            <li>Added a stable fallback identity for events without provider IDs.</li>
+            <li>Preserved explicit callback state transitions and failed call-level states.</li>
+            <li>Introduced route- and resource-bound callback tokens with a longer callback window.</li>
+            <li>Kept WebSocket admission short-lived and limited legacy compatibility to its original window.</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="case-section" aria-labelledby="webhook-validation">
+        <div><p class="eyebrow">03 / Validation</p><h2 id="webhook-validation">Regression coverage followed the trust boundaries.</h2></div>
+        <div class="case-section__body">
+          <p>PR 122 reports the full backend test directory, TypeScript, ESLint, build, and secret audit. PR 210 reports 151 focused tests, Ruff, secret scan, and an external-service guard.</p>
+          <p><strong>Before:</strong> weaker retry identity and a lifetime mismatch. <strong>After:</strong> explicit deduplication and purpose-bound token windows at the cited revisions.</p>
+        </div>
+      </section>
+
+      <section class="case-section" aria-labelledby="webhook-rollback">
+        <div><p class="eyebrow">04 / Rollback</p><h2 id="webhook-rollback">Revert the bounded backend slices.</h2></div>
+        <div class="case-section__body">
+          <p>Neither repair requires a database migration. A prior backend image or commit revert restores the earlier behavior; the compatibility window must be considered before token code is rolled back.</p>
+        </div>
+      </section>
+
+      <section class="case-section" aria-labelledby="webhook-sources">
+        <div><p class="eyebrow">05 / Sources</p><h2 id="webhook-sources">Exact merged change record.</h2></div>
+        <div class="case-section__body">
+          <p><a href="https://github.com/Niyam-Paneru/dentsignal/pull/122">PR 122</a> / <code>e62e439</code> and <a href="https://github.com/Niyam-Paneru/dentsignal/pull/210">PR 210</a> / <code>e42c611</code>.</p>
+          <p><strong>This is engineering proof, not customer proof.</strong> It does not claim certification, zero vulnerabilities, cryptographic review, or current production status. Validation is PR-reported historical evidence.</p>
+          <a href="index.html#work">Back to all work</a>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer"><p>Need retry and callback boundaries repaired?</p><a href="mailto:niyampaneru79@gmail.com?subject=Webhook%20repair%20request">Send the callback</a></footer>
+  </body>
+</html>

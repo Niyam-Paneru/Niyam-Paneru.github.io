@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <title>Cloud provider configuration case study | DentSignal engineering proof</title>
+    <meta name="description" content="How Azure-hosted telemetry narrowed a realtime provider failure to an unsupported settings payload.">
+    <link rel="canonical" href="https://niyam-paneru.github.io/case-study-cloud-provider-config.html">
+    <meta property="og:title" content="Cloud provider configuration case study | DentSignal engineering proof">
+    <meta property="og:description" content="Telemetry, payload correction, and a minimal synthetic handshake with a clear claim boundary.">
+    <meta property="og:url" content="https://niyam-paneru.github.io/case-study-cloud-provider-config.html">
+    <meta property="og:type" content="website">
+    <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="assets/styles.css">
+    <script src="assets/script.js" defer></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to the case study</a>
+    <header class="site-header" data-header>
+      <a class="wordmark" href="index.html" aria-label="Niyam Paneru, home">NP<span> / repair</span></a>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav" data-nav-toggle>Menu</button>
+      <nav class="site-nav" id="site-nav" aria-label="Primary navigation" data-nav>
+        <a href="index.html#work">Work</a><a href="index.html#offers">Offers</a><a href="index.html#contact">Contact</a>
+        <a class="nav-action" href="mailto:niyampaneru79@gmail.com?subject=Cloud%20integration%20repair">Send the trace</a>
+      </nav>
+    </header>
+
+    <main id="main">
+      <section class="case-hero">
+        <div class="case-hero__copy">
+          <p class="eyebrow">DentSignal engineering case study · Cloud integration</p>
+          <h1>The socket opened. The provider still rejected the session.</h1>
+          <p>Azure-hosted telemetry showed transport success followed by a settings rejection and zero emitted media frames. The repair stayed at the application-protocol layer.</p>
+        </div>
+        <dl class="project-facts" aria-label="Case study facts">
+          <div><dt>Area</dt><dd>Azure telemetry, Python, WebSockets</dd></div>
+          <div><dt>Evidence</dt><dd>PR-reported historical evidence</dd></div>
+          <div><dt>Boundary</dt><dd>Application config, not Azure migration</dd></div>
+        </dl>
+      </section>
+
+      <section class="case-section" aria-labelledby="cloud-problem">
+        <div><p class="eyebrow">01 / Problem</p><h2 id="cloud-problem">Transport health hid a protocol failure.</h2></div>
+        <div class="case-section__body">
+          <p>The WebSocket connected, but provider settings were rejected before useful output. A first threshold-only correction left the unsupported payload shape intact.</p>
+          <p><strong>Root cause:</strong> configuration serialization included a nested object the provider did not accept.</p>
+        </div>
+      </section>
+
+      <section class="case-section" aria-labelledby="cloud-repair">
+        <div><p class="eyebrow">02 / Repair</p><h2 id="cloud-repair">Use telemetry to reduce the hypothesis.</h2></div>
+        <div class="case-section__body">
+          <ul>
+            <li>Separated connection success from post-connect settings acceptance.</li>
+            <li>Removed the unsupported nested object rather than tuning unrelated thresholds.</li>
+            <li>Constrained values to the provider-valid range.</li>
+            <li>Added payload-shape and override regressions.</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="case-section" aria-labelledby="cloud-validation">
+        <div><p class="eyebrow">03 / Validation</p><h2 id="cloud-validation">A synthetic handshake proved the narrow correction.</h2></div>
+        <div class="case-section__body">
+          <p>PR 224 reports 182 focused tests, 306 broader tests, Ruff, secret and external-service guards, plus a controlled no-audio handshake that returned <code>SettingsApplied</code>.</p>
+          <p><strong>Before:</strong> rejected settings and zero frames. <strong>After:</strong> the provider accepted the controlled handshake at the cited revision.</p>
+        </div>
+      </section>
+
+      <section class="case-section" aria-labelledby="cloud-rollback">
+        <div><p class="eyebrow">04 / Rollback</p><h2 id="cloud-rollback">Restore the prior backend image or revert the commits.</h2></div>
+        <div class="case-section__body">
+          <p>The repair was bounded to backend configuration and its tests. Rollback does not require a database migration or infrastructure replacement.</p>
+        </div>
+      </section>
+
+      <section class="case-section" aria-labelledby="cloud-sources">
+        <div><p class="eyebrow">05 / Sources</p><h2 id="cloud-sources">Exact merged change record.</h2></div>
+        <div class="case-section__body">
+          <p><a href="https://github.com/Niyam-Paneru/dentsignal/pull/222">PR 222</a> / <code>9191216</code> and <a href="https://github.com/Niyam-Paneru/dentsignal/pull/224">PR 224</a> / <code>73e4c93</code>.</p>
+          <p><strong>This is engineering proof, not customer proof.</strong> It does not claim an Azure infrastructure migration, a real customer interaction, or current production status. Validation is PR-reported historical evidence.</p>
+          <a href="index.html#work">Back to all work</a>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer"><p>Need a cloud integration reduced to evidence?</p><a href="mailto:niyampaneru79@gmail.com?subject=Cloud%20integration%20repair">Send the trace</a></footer>
+  </body>
+</html>

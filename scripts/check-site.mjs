@@ -10,6 +10,11 @@ const requiredFiles = [
   "csv-rescue.html",
   "webhook-lab.html",
   "case-study-dentsignal.html",
+  "case-study-deployment-drift.html",
+  "case-study-ci-gate-recovery.html",
+  "case-study-cloud-provider-config.html",
+  "case-study-async-response-ownership.html",
+  "case-study-webhook-token-hardening.html",
   "404.html",
   "MIGRATION.md",
   "scripts/replace-base-url.mjs",
@@ -131,8 +136,14 @@ export function checkSite(root = scriptRoot) {
       }
     }
 
-    if (/href="https?:\/\/(?:www\.)?github\.com/i.test(content)) {
-      fail(`${rel}: public GitHub links are not allowed`);
+    const githubLinks = [
+      ...content.matchAll(/href="(https?:\/\/(?:www\.)?github\.com\/[^"]+)"/gi),
+    ].map((match) => match[1]);
+    const unsupportedGithubLinks = githubLinks.filter(
+      (href) => !/^https:\/\/github\.com\/Niyam-Paneru\/dentsignal\/pull\/\d+$/.test(href),
+    );
+    if (unsupportedGithubLinks.length) {
+      fail(`${rel}: public GitHub links are not allowed outside cited DentSignal pull requests`);
     }
     if (content.includes("SECOND_USERNAME")) fail(`${rel}: unresolved username token`);
     if (/trusted by|\$\s?\d+(?:\.\d+)?[kmb]?\s+(?:arr|mrr|revenue)|\b\d+\+?\s+(?:paying )?(?:customers|clinics)\b/i.test(content)) {

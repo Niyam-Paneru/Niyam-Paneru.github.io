@@ -29,6 +29,27 @@ test("accepts the reviewed source portfolio", () => {
   assert.deepEqual(checkSite(root), []);
 });
 
+test("publishes five sanitized DentSignal engineering case studies with exact evidence links", () => {
+  const cases = [
+    "case-study-deployment-drift.html",
+    "case-study-ci-gate-recovery.html",
+    "case-study-cloud-provider-config.html",
+    "case-study-async-response-ownership.html",
+    "case-study-webhook-token-hardening.html",
+  ];
+  const home = readFileSync(join(root, "index.html"), "utf8");
+
+  for (const name of cases) {
+    const content = readFileSync(join(root, name), "utf8");
+    assert.match(content, /DentSignal engineering case study/);
+    assert.match(content, /PR-reported historical evidence/);
+    assert.match(content, /https:\/\/github\.com\/Niyam-Paneru\/dentsignal\/pull\/\d+/);
+    assert.match(content, /This is engineering proof, not customer proof\./);
+    assert.match(content, /Rollback/);
+    assert.ok(home.includes(`href="${name}"`), `index.html does not link ${name}`);
+  }
+});
+
 test("rejects public GitHub profile links and unresolved deployment tokens", (context) => {
   const target = fixture();
   context.after(() => rmSync(target, { recursive: true, force: true }));

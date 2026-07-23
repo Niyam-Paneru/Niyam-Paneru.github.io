@@ -1,11 +1,14 @@
 # Premium Proof Portfolio
 
-A static sales portfolio for bounded software repair work. The public site contains five pages:
+A static sales portfolio for bounded software repair work. The public site contains ten HTML pages:
 
-- `index.html` — concise offer, three proof bands, fixed starting prices, and email contact;
+- `index.html` — concise offer, eight proof entries, fixed starting prices, and email contact;
 - `csv-rescue.html` — working browser-local CSV parser and safe cleanup tool;
 - `webhook-lab.html` — working deterministic webhook validation and retry simulator;
 - `case-study-dentsignal.html` — a real interface shown only with synthetic demo data;
+- five `case-study-*.html` engineering pages — sanitized, revision-linked DentSignal
+  repair evidence for deployment drift, CI/CD, cloud configuration, async
+  reliability, and webhook/token hardening;
 - `404.html` — small recovery page.
 
 ## Truth and privacy boundaries
@@ -13,7 +16,10 @@ A static sales portfolio for bounded software repair work. The public site conta
 - CSV Rescue and Webhook Lab are fictional brands labeled `Concept demo`.
 - Both tools run entirely in the browser. They make no external request and persist no input.
 - DentSignal evidence comes from a local synthetic fixture and is labeled `Real interface. Synthetic demo data.`
-- The site has no analytics, cookies, contact backend, external JavaScript, public GitHub profile link, testimonial, or commercial outcome claim.
+- Engineering case studies label validation as PR-reported historical evidence and
+  link only their exact merged DentSignal pull requests.
+- The site has no analytics, cookies, contact backend, external JavaScript, public
+  GitHub profile link, testimonial, or commercial outcome claim.
 
 ## Local verification
 
@@ -24,7 +30,12 @@ npm run test:browser
 git diff --check
 ```
 
-`npm run check` runs 27 unit/static tests, repository proof checks, and JavaScript syntax checks. The browser smoke uses an installed Chrome channel and verifies desktop/mobile layout, keyboard navigation, reduced motion, both demo happy/error paths, CSV download creation, duplicate event detection, retry exhaustion, console errors, and the DentSignal caption.
+`npm run check` runs 28 unit/static tests, repository proof checks, and JavaScript
+syntax checks. The browser smoke uses an installed Chrome channel and verifies
+desktop/mobile layout, keyboard navigation, reduced motion, both demo happy/error
+paths, CSV download creation, duplicate event detection, retry exhaustion, console
+errors, the synthetic DentSignal caption, and all five engineering-case truth
+boundaries.
 
 For a local preview:
 

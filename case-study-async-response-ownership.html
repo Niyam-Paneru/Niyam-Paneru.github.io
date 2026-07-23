@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <title>Async response ownership case study | DentSignal engineering proof</title>
+    <meta name="description" content="A revision-linked async reliability repair using one response owner, output evidence, cancellation, and bounded fallback.">
+    <link rel="canonical" href="https://niyam-paneru.github.io/case-study-async-response-ownership.html">
+    <meta property="og:title" content="Async response ownership case study | DentSignal engineering proof">
+    <meta property="og:description" content="Competing async responses reduced to explicit ownership and evidence-triggered recovery.">
+    <meta property="og:url" content="https://niyam-paneru.github.io/case-study-async-response-ownership.html">
+    <meta property="og:type" content="website">
+    <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="assets/styles.css">
+    <script src="assets/script.js" defer></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to the case study</a>
+    <header class="site-header" data-header>
+      <a class="wordmark" href="index.html" aria-label="Niyam Paneru, home">NP<span> / repair</span></a>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav" data-nav-toggle>Menu</button>
+      <nav class="site-nav" id="site-nav" aria-label="Primary navigation" data-nav>
+        <a href="index.html#work">Work</a><a href="index.html#offers">Offers</a><a href="index.html#contact">Contact</a>
+        <a class="nav-action" href="mailto:niyampaneru79@gmail.com?subject=Async%20reliability%20repair">Send the race</a>
+      </nav>
+    </header>
+
+    <main id="main">
+      <section class="case-hero">
+        <div class="case-hero__copy">
+          <p class="eyebrow">DentSignal engineering case study · Async reliability</p>
+          <h1>Two response owners made one broken turn.</h1>
+          <p>Competing paths could produce duplicate output, suppress recovery without playable bytes, or leave a later request waiting indefinitely.</p>
+        </div>
+        <dl class="project-facts" aria-label="Case study facts">
+          <div><dt>Area</dt><dd>Async state, streaming events, cancellation</dd></div>
+          <div><dt>Evidence</dt><dd>PR-reported historical evidence</dd></div>
+          <div><dt>Boundary</dt><dd>Controlled tests, not latency promise</dd></div>
+        </dl>
+      </section>
+
+      <section class="case-section" aria-labelledby="async-problem">
+        <div><p class="eyebrow">01 / Problem</p><h2 id="async-problem">Control events were mistaken for usable output.</h2></div>
+        <div class="case-section__body">
+          <p>Multiple components could claim the same response. A control event could cancel recovery even when no playable bytes had arrived, and queued speculative work survived new input.</p>
+          <p><strong>Root cause:</strong> ownership and cancellation depended on ambiguous activity rather than explicit output evidence.</p>
+        </div>
+      </section>
+
+      <section class="case-section" aria-labelledby="async-repair">
+        <div><p class="eyebrow">02 / Repair</p><h2 id="async-repair">One owner. Explicit evidence. Bounded fallback.</h2></div>
+        <div class="case-section__body">
+          <ul>
+            <li>Preserved conversation state while selecting one primary response owner.</li>
+            <li>Disabled speculative turns and cleared queued work on new caller activity.</li>
+            <li>Cancelled recovery only when playable output arrived.</li>
+            <li>Added a 2.5-second bounded fallback for the no-output path.</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="case-section" aria-labelledby="async-validation">
+        <div><p class="eyebrow">03 / Validation</p><h2 id="async-validation">Successive regressions followed the state machine.</h2></div>
+        <div class="case-section__body">
+          <p>The three cited PRs report 304, 306, and 310 focused or broader tests across the successive fixes, plus formatting and diff checks.</p>
+          <p><strong>Before:</strong> duplicate, cut, or stalled responses. <strong>After:</strong> one primary owner with evidence-triggered cancellation and bounded recovery at the cited revisions.</p>
+        </div>
+      </section>
+
+      <section class="case-section" aria-labelledby="async-rollback">
+        <div><p class="eyebrow">04 / Rollback</p><h2 id="async-rollback">Revert the isolated response-control sequence.</h2></div>
+        <div class="case-section__body">
+          <p>Rollback is a commit revert or prior backend image. The sequence has no database migration; response ownership and fallback behavior should be rolled back together.</p>
+        </div>
+      </section>
+
+      <section class="case-section" aria-labelledby="async-sources">
+        <div><p class="eyebrow">05 / Sources</p><h2 id="async-sources">Exact merged change record.</h2></div>
+        <div class="case-section__body">
+          <p><a href="https://github.com/Niyam-Paneru/dentsignal/pull/223">PR 223</a> / <code>a4c498e</code>, <a href="https://github.com/Niyam-Paneru/dentsignal/pull/225">PR 225</a> / <code>ab250dc</code>, and <a href="https://github.com/Niyam-Paneru/dentsignal/pull/226">PR 226</a> / <code>bd5c8e4</code>.</p>
+          <p><strong>This is engineering proof, not customer proof.</strong> It does not claim perfect latency, live-use proof, or current production status. Validation is PR-reported historical evidence.</p>
+          <a href="index.html#work">Back to all work</a>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer"><p>Need an async race made deterministic?</p><a href="mailto:niyampaneru79@gmail.com?subject=Async%20reliability%20repair">Send the race</a></footer>
+  </body>
+</html>

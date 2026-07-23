@@ -421,6 +421,42 @@ p {
   color: var(--ink-soft);
 }
 
+.engineering-proof-grid {
+  display: grid;
+  margin-bottom: var(--space-4xl);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  border-top: 1px solid var(--ink);
+  border-left: 1px solid var(--line-dark);
+}
+
+.engineering-proof-card {
+  display: flex;
+  min-height: 21rem;
+  padding: clamp(1.5rem, 4vw, 3rem);
+  flex-direction: column;
+  border-right: 1px solid var(--line-dark);
+  border-bottom: 1px solid var(--line-dark);
+}
+
+.engineering-proof-card:last-child {
+  grid-column: 1 / -1;
+  min-height: 16rem;
+}
+
+.engineering-proof-card h3 {
+  max-width: 17ch;
+  font-size: clamp(1.8rem, 3.4vw, 3rem);
+}
+
+.engineering-proof-card p:not(.eyebrow) {
+  color: var(--ink-soft);
+}
+
+.engineering-proof-card a {
+  margin-top: auto;
+  font-weight: 740;
+}
+
 .proof-band {
   display: grid;
   min-height: 29rem;
@@ -1194,6 +1230,7 @@ td:last-child {
   }
 
   .section-heading,
+  .engineering-proof-grid,
   .proof-band,
   .proof-band--reverse,
   .demo-shell__heading,
@@ -1205,6 +1242,11 @@ td:last-child {
   .outcome-panel,
   .contact-band {
     grid-template-columns: 1fr;
+  }
+
+  .engineering-proof-card:last-child {
+    grid-column: auto;
+    min-height: 21rem;
   }
 
   .proof-band__copy {

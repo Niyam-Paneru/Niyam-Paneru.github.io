@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <title>CI gate recovery case study | DentSignal engineering proof</title>
+    <meta name="description" content="A revision-linked account of classifying and repairing eleven failing CI gates across a Python and TypeScript stack.">
+    <link rel="canonical" href="https://niyam-paneru.github.io/case-study-ci-gate-recovery.html">
+    <meta property="og:title" content="CI gate recovery case study | DentSignal engineering proof">
+    <meta property="og:description" content="Eleven CI failures separated by root cause, repaired, and documented with bounded claims.">
+    <meta property="og:url" content="https://niyam-paneru.github.io/case-study-ci-gate-recovery.html">
+    <meta property="og:type" content="website">
+    <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="assets/styles.css">
+    <script src="assets/script.js" defer></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to the case study</a>
+    <header class="site-header" data-header>
+      <a class="wordmark" href="index.html" aria-label="Niyam Paneru, home">NP<span> / repair</span></a>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav" data-nav-toggle>Menu</button>
+      <nav class="site-nav" id="site-nav" aria-label="Primary navigation" data-nav>
+        <a href="index.html#work">Work</a><a href="index.html#offers">Offers</a><a href="index.html#contact">Contact</a>
+        <a class="nav-action" href="mailto:niyampaneru79@gmail.com?subject=CI%20repair%20request">Send the failures</a>
+      </nav>
+    </header>
+
+    <main id="main">
+      <section class="case-hero">
+        <div class="case-hero__copy">
+          <p class="eyebrow">DentSignal engineering case study · CI/CD</p>
+          <h1>Eleven red gates were not one bug.</h1>
+          <p>The useful move was classification: independent failures in backend code, frontend contracts, security checks, dependencies, and workflow wiring needed independent causes.</p>
+        </div>
+        <dl class="project-facts" aria-label="Case study facts">
+          <div><dt>Area</dt><dd>Python, TypeScript, security and supply chain</dd></div>
+          <div><dt>Evidence</dt><dd>PR-reported historical evidence</dd></div>
+          <div><dt>Boundary</dt><dd>Eleven gates at one cited revision</dd></div>
+        </dl>
+      </section>
+
+      <section class="case-section" aria-labelledby="ci-problem">
+        <div><p class="eyebrow">01 / Problem</p><h2 id="ci-problem">The pipeline failed across unrelated lanes.</h2></div>
+        <div class="case-section__body">
+          <p>The PR records eleven failed gates spanning Ruff, handler registration, CORS, secret scanning, supply-chain scripts, dependencies, and frontend mocks.</p>
+          <p><strong>Root cause:</strong> a single red pipeline hid several contract failures. Treating it as one issue would have encouraged broad, risky changes.</p>
+        </div>
+      </section>
+
+      <section class="case-section" aria-labelledby="ci-repair">
+        <div><p class="eyebrow">02 / Repair</p><h2 id="ci-repair">Fix each contract at its source.</h2></div>
+        <div class="case-section__body">
+          <ul>
+            <li>Repaired missing imports and types, then registered an orphaned handler.</li>
+            <li>Corrected the rate-limit response and cross-origin contract.</li>
+            <li>Removed key-like documentation text and fixed scanner paths and arguments.</li>
+            <li>Upgraded the bounded vulnerable dependencies and restored frontend API/mock contracts.</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="case-section" aria-labelledby="ci-validation">
+        <div><p class="eyebrow">03 / Validation</p><h2 id="ci-validation">A gate inventory made completion reviewable.</h2></div>
+        <div class="case-section__body">
+          <p>At the cited revision, the merged PR enumerates each failing gate and the corresponding correction. This is PR-reported historical evidence; the checks were not rerun for this portfolio change.</p>
+          <p><strong>Before:</strong> eleven named gates failed. <strong>After:</strong> the repair merged across the backend, frontend, security, and supply-chain lanes described in the PR.</p>
+        </div>
+      </section>
+
+      <section class="case-section" aria-labelledby="ci-rollback">
+        <div><p class="eyebrow">04 / Rollback</p><h2 id="ci-rollback">Keep workflow and source contracts together.</h2></div>
+        <div class="case-section__body">
+          <p>Rollback is a unit revert of merge commit <code>7252c74</code>. The workflow and application corrections should not be separated casually because the restored checks rely on the repaired contracts.</p>
+        </div>
+      </section>
+
+      <section class="case-section" aria-labelledby="ci-source">
+        <div><p class="eyebrow">05 / Source</p><h2 id="ci-source">Exact merged change record.</h2></div>
+        <div class="case-section__body">
+          <p><a href="https://github.com/Niyam-Paneru/dentsignal/pull/90">PR 90</a> / merge commit <code>7252c74</code>.</p>
+          <p><strong>This is engineering proof, not customer proof.</strong> It does not claim that every current CI gate passes, that the full product is secure, or that a customer outcome followed.</p>
+          <a href="index.html#work">Back to all work</a>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer"><p>Need a mixed-stack pipeline untangled?</p><a href="mailto:niyampaneru79@gmail.com?subject=CI%20repair%20request">Send the failures</a></footer>
+  </body>
+</html>
