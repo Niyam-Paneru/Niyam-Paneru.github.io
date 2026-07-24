@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <title>Async response ownership case study | DentSignal engineering proof</title>
+    <meta name="description" content="A plain-language async reliability repair using one response owner, playable-output evidence, cancellation, and bounded fallback.">
+    <link rel="canonical" href="https://niyam-paneru.github.io/case-study-async-response-ownership.html">
+    <meta property="og:title" content="Async response ownership case study | DentSignal engineering proof">
+    <meta property="og:description" content="How competing response paths became one explicit owner with time-bounded recovery.">
+    <meta property="og:url" content="https://niyam-paneru.github.io/case-study-async-response-ownership.html">
+    <meta property="og:type" content="website">
+    <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="assets/styles.css">
+    <script src="assets/script.js" defer></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to the case study</a>
+    <header class="site-header" data-header>
+      <a class="wordmark" href="index.html" aria-label="Niyam Paneru, home">NP<span> / repair</span></a>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav" data-nav-toggle>Menu</button>
+      <nav class="site-nav" id="site-nav" aria-label="Primary navigation" data-nav>
+        <a href="index.html#work">Work</a>
+        <a href="index.html#offers">Offers</a>
+        <a href="index.html#contact">Contact</a>
+        <a class="nav-action" href="mailto:niyampaneru79@gmail.com?subject=Async%20reliability%20repair">Send the race</a>
+      </nav>
+    </header>
+
+    <main id="main">
+      <section class="case-hero case-hero--compact">
+        <div class="case-hero__copy">
+          <p class="eyebrow">DentSignal engineering case study · Async reliability</p>
+          <h1>Two components tried to answer once.</h1>
+          <p>Competing response paths could duplicate output, stop recovery before playable bytes arrived, or leave later work waiting. The repair gave one path ownership and made cancellation depend on real output.</p>
+        </div>
+        <dl class="project-facts" aria-label="Case study facts">
+          <div><dt>Area</dt><dd>Async state, streaming events, cancellation</dd></div>
+          <div><dt>Evidence</dt><dd>Historical PR-reported validation</dd></div>
+          <div><dt>Boundary</dt><dd>Controlled tests, not latency promise</dd></div>
+        </dl>
+      </section>
+
+      <section class="plain-summary" aria-labelledby="async-summary">
+        <div class="plain-summary__intro">
+          <p class="eyebrow">Plain English</p>
+          <h2 id="async-summary">One request needs one owner.</h2>
+        </div>
+        <ul class="summary-grid">
+          <li><span>What broke</span><p>Two response paths could act on the same turn, while control activity was mistaken for sound a person could actually hear.</p></li>
+          <li><span>What changed</span><p>One path became the owner, queued speculative work was cleared, and recovery stopped only after playable output arrived.</p></li>
+          <li><span>Why it matters</span><p>Explicit ownership prevents duplicate answers. A 2.5-second fallback also bounds silence when the primary path produces nothing.</p></li>
+        </ul>
+      </section>
+
+      <section class="repair-example" aria-labelledby="async-example">
+        <div class="repair-example__heading">
+          <p class="eyebrow">Simplified repair</p>
+          <h2 id="async-example">Cancel recovery only for usable output.</h2>
+        </div>
+        <div class="repair-compare">
+          <article class="code-card code-card--broken">
+            <p class="code-label">Broken · simplified example</p>
+            <pre><code>owner_a.respond()
+owner_b.respond()
+
+on_any_activity:
+    cancel_fallback()</code></pre>
+            <p>Two owners can overlap, and a control event can cancel the only recovery path.</p>
+          </article>
+          <article class="code-card code-card--fixed">
+            <p class="code-label">Fixed · simplified example</p>
+            <pre><code>response_owner = primary
+
+on_playable_output:
+    cancel_fallback()
+
+await fallback_after(2.5)</code></pre>
+            <p>One owner responds; only audible output cancels the bounded fallback.</p>
+          </article>
+        </div>
+        <p class="illustration-note">Illustration only — not copied from private source.</p>
+      </section>
+
+      <section class="verification-strip" aria-labelledby="async-validation">
+        <div class="verification-strip__evidence">
+          <p class="eyebrow">How it was checked</p>
+          <h2 id="async-validation">Historical PR-reported validation</h2>
+          <p>The cited history reports 304, 306, and 310 focused or broader tests across the successive ownership, cancellation, and fallback corrections, plus formatting and diff checks.</p>
+        </div>
+        <aside class="proof-boundary" aria-label="Claim boundary">
+          <p class="eyebrow">What this does not prove</p>
+          <p><strong>This is engineering proof, not customer proof.</strong> DentSignal is not client work. This evidence does not establish perfect latency, live-clinic outcomes, or correctness outside the cited paths.</p>
+        </aside>
+      </section>
+
+      <nav class="case-return" aria-label="Case study navigation">
+        <a href="index.html#repair-collection">← Back to the repair archive</a>
+        <a href="mailto:niyampaneru79@gmail.com?subject=Async%20reliability%20repair">Send a similar race →</a>
+      </nav>
+    </main>
+
+    <footer class="site-footer"><p>Need an async race made deterministic?</p><a href="mailto:niyampaneru79@gmail.com?subject=Async%20reliability%20repair">Send the race</a></footer>
+  </body>
+</html>

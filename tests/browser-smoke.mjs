@@ -77,6 +77,10 @@ try {
   await assertNoOverflow(desktop, "desktop home");
   assert.equal(await desktop.title(), "Niyam Paneru | Software repair and launch support");
   assert.equal(await desktop.locator(".proof-band").count(), 3);
+  assert.equal(await desktop.locator(".repair-collection").count(), 1);
+  assert.equal(await desktop.locator(".repair-row").count(), 5);
+  assert.equal(await desktop.locator(".engineering-proof-card").count(), 0);
+  assert.equal(await desktop.locator('img[src*="dentsignal-dashboard"]').count(), 0);
   assert.equal(await desktop.locator('a[href*="github.com"]').count(), 0);
   assert.equal(await desktop.getByText("Real interface. Synthetic demo data.").count(), 1);
   assert.deepEqual(desktopErrors, []);
@@ -158,8 +162,35 @@ try {
   assert.deepEqual(caseErrors, []);
   await casePage.close();
 
+  for (const path of [
+    "case-study-deployment-drift.html",
+    "case-study-ci-gate-recovery.html",
+    "case-study-cloud-provider-config.html",
+    "case-study-async-response-ownership.html",
+    "case-study-webhook-token-hardening.html",
+  ]) {
+    const engineeringCase = await browser.newPage({ viewport: { width: 390, height: 844 } });
+    const engineeringErrors = collectErrors(engineeringCase);
+    await engineeringCase.goto(`${baseUrl}/${path}`, { waitUntil: "networkidle" });
+    await assertNoOverflow(engineeringCase, path);
+    assert.equal(
+      await engineeringCase.getByText("DentSignal engineering case study", { exact: false }).count(),
+      1,
+    );
+    assert.equal(await engineeringCase.locator('a[href*="github.com"]').count(), 0);
+    assert.equal(await engineeringCase.locator(".summary-grid li").count(), 3);
+    assert.equal(await engineeringCase.locator(".code-card").count(), 2);
+    assert.equal(
+      await engineeringCase.getByText("Illustration only — not copied from private source.").count(),
+      1,
+    );
+    assert.equal(await engineeringCase.getByText("What this does not prove").count(), 1);
+    assert.deepEqual(engineeringErrors, []);
+    await engineeringCase.close();
+  }
+
   console.log(
-    `Browser smoke passed at ${baseUrl}: desktop, mobile, CSV, webhook, download, and DentSignal truth boundary.`,
+    `Browser smoke passed at ${baseUrl}: desktop, mobile, CSV, webhook, download, and six DentSignal truth boundaries.`,
   );
 } finally {
   if (browser) await browser.close();

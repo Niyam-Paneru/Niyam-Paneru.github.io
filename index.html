@@ -39,10 +39,15 @@
           </div>
         </div>
 
-        <div class="hero-stage" aria-label="Three working software interfaces">
-          <a class="proof-screen proof-screen--dentsignal" href="case-study-dentsignal.html">
-            <img src="assets/proof/dentsignal-dashboard-desktop.png" alt="DentSignal operator dashboard using synthetic demo data">
-            <span class="screen-label">Product build · Tested</span>
+        <div class="hero-stage" aria-label="Two working tools and one repair archive">
+          <a class="proof-screen proof-screen--repair" href="#repair-collection">
+            <span class="repair-ticket" aria-hidden="true">
+              <span class="repair-ticket__top"><b>REPAIR / 05</b><i>Bounded proof</i></span>
+              <span class="repair-ticket__line"><i>Deployment drift</i><b>observed</b></span>
+              <span class="repair-ticket__line"><i>CI failures</i><b>classified</b></span>
+              <span class="repair-ticket__line"><i>Async race</i><b>bounded</b></span>
+            </span>
+            <span class="screen-label">Engineering repairs · Plain English</span>
           </a>
           <a class="proof-screen proof-screen--webhook" href="webhook-lab.html">
             <img src="assets/proof/webhook-lab-desktop.png" alt="Webhook Lab showing a deterministic retry timeline">
@@ -58,10 +63,10 @@
       <section class="proof-index" id="work" aria-labelledby="work-title">
         <div class="section-heading">
           <div>
-            <p class="eyebrow">Selected work / 03</p>
+            <p class="eyebrow">Selected work / 03 + repair archive</p>
             <h2 id="work-title">Proof before promises.</h2>
           </div>
-          <p>One product interface and two working tools. Every label tells you what is real.</p>
+          <p>One product interface and two working tools come first. Five smaller engineering repairs sit together below, with plain-language explanations and honest limits.</p>
         </div>
 
         <article class="proof-band">
@@ -76,8 +81,15 @@
               <a href="case-study-dentsignal.html">See problem, system, and boundary</a>
             </div>
           </div>
-          <div class="proof-band__visual">
-            <img src="assets/proof/dentsignal-dashboard-desktop.png" alt="DentSignal dashboard with call, booking, and follow-up controls populated by synthetic demo data" loading="lazy">
+          <div class="proof-band__visual proof-band__visual--system" role="img" aria-label="A simplified operator workflow connecting signal, decision, and guarded action">
+            <div class="system-map">
+              <span class="system-map__label">Operator loop</span>
+              <div><b>01</b><strong>Signal</strong><small>One event arrives</small></div>
+              <i aria-hidden="true">→</i>
+              <div><b>02</b><strong>Decision</strong><small>Guard checks context</small></div>
+              <i aria-hidden="true">→</i>
+              <div><b>03</b><strong>Action</strong><small>Human stays in control</small></div>
+            </div>
           </div>
         </article>
 
@@ -98,7 +110,7 @@
           </div>
         </article>
 
-        <article class="proof-band">
+        <article class="proof-band proof-band--last">
           <div class="proof-band__copy">
             <div>
               <p class="eyebrow">03 · Concept demo · Deterministic simulation</p>
@@ -114,6 +126,48 @@
             <img src="assets/proof/webhook-lab-desktop.png" alt="Webhook Lab browser tool showing validation, attempts, wait times, and delivered state" loading="lazy">
           </div>
         </article>
+
+        <section class="repair-collection" id="repair-collection" aria-labelledby="repair-collection-title">
+          <header class="repair-collection__header">
+            <div>
+              <p class="eyebrow">Engineering repair archive / 05</p>
+              <h3 id="repair-collection-title">Small failures, explained clearly.</h3>
+            </div>
+            <p>DentSignal is not client work. These pages show the engineering problem, a simplified before-and-after example, how the cited revision was checked, and what it does not prove.</p>
+          </header>
+          <div class="repair-list">
+            <a class="repair-row" href="case-study-deployment-drift.html">
+              <span class="repair-row__number">R1</span>
+              <span><small>Vercel / CI</small><strong>Live page did not match the source</strong></span>
+              <span>Make source, deployment, and domain checks agree.</span>
+              <b>Open →</b>
+            </a>
+            <a class="repair-row" href="case-study-ci-gate-recovery.html">
+              <span class="repair-row__number">R2</span>
+              <span><small>CI/CD</small><strong>Eleven red gates hid different causes</strong></span>
+              <span>Classify each failure before changing code.</span>
+              <b>Open →</b>
+            </a>
+            <a class="repair-row" href="case-study-cloud-provider-config.html">
+              <span class="repair-row__number">R3</span>
+              <span><small>Azure / WebSockets</small><strong>The connection opened, then failed</strong></span>
+              <span>Use telemetry to isolate one rejected setting.</span>
+              <b>Open →</b>
+            </a>
+            <a class="repair-row" href="case-study-async-response-ownership.html">
+              <span class="repair-row__number">R4</span>
+              <span><small>Async reliability</small><strong>Two components answered one request</strong></span>
+              <span>Choose one owner and bound the recovery path.</span>
+              <b>Open →</b>
+            </a>
+            <a class="repair-row" href="case-study-webhook-token-hardening.html">
+              <span class="repair-row__number">R5</span>
+              <span><small>FastAPI / webhooks</small><strong>Retries and callbacks shared weak boundaries</strong></span>
+              <span>Give events stable identity and tokens one purpose.</span>
+              <b>Open →</b>
+            </a>
+          </div>
+        </section>
       </section>
 
       <section class="offers" id="offers" aria-labelledby="offers-title">
