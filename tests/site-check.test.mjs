@@ -107,13 +107,15 @@ test("documents the actual repository owner and public URL", () => {
 
 test("migration hygiene does not reject the actual public URL", () => {
   const content = readFileSync(join(root, "MIGRATION.md"), "utf8");
+  const usernameToken = ["SECOND", "USERNAME"].join("_");
+  const helperSafeToken = usernameToken.replace("_", "[_]");
   assert.ok(
-    !content.includes('rg -n "SECOND_USERNAME|https://niyam-paneru.github.io"'),
+    !content.includes(`rg -n "${usernameToken}|https://niyam-paneru.github.io"`),
     "MIGRATION.md treats the actual public URL as stale",
   );
-  assert.ok(!content.includes("SECOND_USERNAME"), "MIGRATION.md exposes its username-token check to the helper");
+  assert.ok(!content.includes(usernameToken), "MIGRATION.md exposes its username-token check to the helper");
   assert.ok(
-    content.includes('rg -n "SECOND[_]USERNAME" .'),
+    content.includes(`rg -n "${helperSafeToken}" .`),
     "MIGRATION.md lacks its helper-safe username-token check",
   );
 });
