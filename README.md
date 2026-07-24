@@ -30,7 +30,7 @@ npm run test:browser
 git diff --check
 ```
 
-`npm run check` runs 28 unit/static tests, repository proof checks, and JavaScript
+`npm run check` runs 30 unit/static tests, repository proof checks, and JavaScript
 syntax checks. The browser smoke uses an installed Chrome channel and verifies
 desktop/mobile layout, keyboard navigation, reduced motion, both demo happy/error
 paths, CSV download creation, duplicate event detection, retry exhaustion, console

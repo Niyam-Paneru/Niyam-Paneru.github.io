@@ -103,6 +103,8 @@ test("documents the actual repository owner and public URL", () => {
     assert.ok(!content.includes("NiyamPaneru"), `${name} contains the old owner`);
     assert.ok(!content.includes("https://niyampaneru.github.io/"), `${name} contains the old public URL`);
   }
+  const readme = readFileSync(join(root, "README.md"), "utf8");
+  assert.ok(readme.includes("30 unit/static tests"), "README.md contains a stale test count");
 });
 
 test("migration hygiene does not reject the actual public URL", () => {
