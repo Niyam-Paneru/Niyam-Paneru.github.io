@@ -77,7 +77,10 @@ try {
   await assertNoOverflow(desktop, "desktop home");
   assert.equal(await desktop.title(), "Niyam Paneru | Software repair and launch support");
   assert.equal(await desktop.locator(".proof-band").count(), 3);
-  assert.equal(await desktop.locator(".engineering-proof-card").count(), 5);
+  assert.equal(await desktop.locator(".repair-collection").count(), 1);
+  assert.equal(await desktop.locator(".repair-row").count(), 5);
+  assert.equal(await desktop.locator(".engineering-proof-card").count(), 0);
+  assert.equal(await desktop.locator('img[src*="dentsignal-dashboard"]').count(), 0);
   assert.equal(await desktop.locator('a[href*="github.com"]').count(), 0);
   assert.equal(await desktop.getByText("Real interface. Synthetic demo data.").count(), 1);
   assert.deepEqual(desktopErrors, []);
@@ -174,10 +177,14 @@ try {
       await engineeringCase.getByText("DentSignal engineering case study", { exact: false }).count(),
       1,
     );
-    assert.ok(
-      await engineeringCase.locator('a[href^="https://github.com/Niyam-Paneru/dentsignal/pull/"]').count(),
-      `${path} is missing an exact pull-request link`,
+    assert.equal(await engineeringCase.locator('a[href*="github.com"]').count(), 0);
+    assert.equal(await engineeringCase.locator(".summary-grid li").count(), 3);
+    assert.equal(await engineeringCase.locator(".code-card").count(), 2);
+    assert.equal(
+      await engineeringCase.getByText("Illustration only — not copied from private source.").count(),
+      1,
     );
+    assert.equal(await engineeringCase.getByText("What this does not prove").count(), 1);
     assert.deepEqual(engineeringErrors, []);
     await engineeringCase.close();
   }

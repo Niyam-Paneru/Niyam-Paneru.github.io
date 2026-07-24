@@ -4,10 +4,10 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <title>Deployment drift case study | DentSignal engineering proof</title>
-    <meta name="description" content="How a source-versus-live deployment mismatch became an explicit Vercel and custom-domain verification path.">
+    <meta name="description" content="A plain-language account of making source, Vercel deployment, and custom-domain checks agree.">
     <link rel="canonical" href="https://niyam-paneru.github.io/case-study-deployment-drift.html">
     <meta property="og:title" content="Deployment drift case study | DentSignal engineering proof">
-    <meta property="og:description" content="A revision-linked CI/CD repair with its validation and claim boundary.">
+    <meta property="og:description" content="How a live page that lagged behind its source became an explicit deployment check.">
     <meta property="og:url" content="https://niyam-paneru.github.io/case-study-deployment-drift.html">
     <meta property="og:type" content="website">
     <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
@@ -28,11 +28,11 @@
     </header>
 
     <main id="main">
-      <section class="case-hero">
+      <section class="case-hero case-hero--compact">
         <div class="case-hero__copy">
-          <p class="eyebrow">DentSignal engineering case study · CI/CD</p>
-          <h1>Source was current. The live domain was not.</h1>
-          <p>A source-only test could pass while the public surface still served stale content. The repair made that disagreement observable and recoverable.</p>
+          <p class="eyebrow">DentSignal engineering case study · Deployment</p>
+          <h1>The code changed. The live page did not.</h1>
+          <p>A repository check said the new version existed, but visitors could still receive an older page. The missing step was checking the actual deployment and custom domain.</p>
         </div>
         <dl class="project-facts" aria-label="Case study facts">
           <div><dt>Area</dt><dd>Vercel, GitHub Actions, custom-domain checks</dd></div>
@@ -41,54 +41,59 @@
         </dl>
       </section>
 
-      <section class="case-section" aria-labelledby="drift-problem">
-        <div><p class="eyebrow">01 / Problem</p><h2 id="drift-problem">A green source check missed deployment drift.</h2></div>
-        <div class="case-section__body">
-          <p>The repository contained the intended change, but the custom domain could still serve an older build. A local or source-level assertion could not prove what the deployed surface returned.</p>
-          <p><strong>Root cause:</strong> the verification chain stopped before the exact hosting project, deployed URL, and custom domain.</p>
+      <section class="plain-summary" aria-labelledby="drift-summary">
+        <div class="plain-summary__intro">
+          <p class="eyebrow">Plain English</p>
+          <h2 id="drift-summary">Three things to know.</h2>
         </div>
+        <ul class="summary-grid">
+          <li><span>What broke</span><p>The source repository and the public website disagreed, so a green source check gave false confidence.</p></li>
+          <li><span>What changed</span><p>The checks followed one chain: source revision, exact deployment, then the custom domain visitors use.</p></li>
+          <li><span>Why it matters</span><p>A repair is not finished when the file is correct. It is finished when the intended version reaches the real surface.</p></li>
+        </ul>
       </section>
 
-      <section class="case-section" aria-labelledby="drift-repair">
-        <div><p class="eyebrow">02 / Repair</p><h2 id="drift-repair">Connect source, deployment, and domain contracts.</h2></div>
-        <div class="case-section__body">
-          <ul>
-            <li>Added cache-busted custom-domain smoke checks with explicit stale-phrase rejection.</li>
-            <li>Wired the copy contract into CI so source drift could fail before release.</li>
-            <li>Audited the exact Vercel project without printing credentials or project identifiers.</li>
-            <li>Removed a conflicting build-root override and created an explicit deployment path for the checked-out revision.</li>
-          </ul>
+      <section class="repair-example" aria-labelledby="drift-example">
+        <div class="repair-example__heading">
+          <p class="eyebrow">Simplified repair</p>
+          <h2 id="drift-example">Check the destination, not only the source.</h2>
         </div>
+        <div class="repair-compare">
+          <article class="code-card code-card--broken">
+            <p class="code-label">Broken · simplified example</p>
+            <pre><code>assert source_has("new page")
+# Stops here.
+# The live domain may still be old.</code></pre>
+            <p>The test proves what is in the repository, not what a visitor receives.</p>
+          </article>
+          <article class="code-card code-card--fixed">
+            <p class="code-label">Fixed · simplified example</p>
+            <pre><code>assert source_has("new page")
+assert deployment_matches(revision)
+assert custom_domain_has("new page")
+assert custom_domain_lacks("old page")</code></pre>
+            <p>The same release contract now reaches the deployed URL and the public domain.</p>
+          </article>
+        </div>
+        <p class="illustration-note">Illustration only — not copied from private source.</p>
       </section>
 
-      <section class="case-section" aria-labelledby="drift-validation">
-        <div><p class="eyebrow">03 / Validation</p><h2 id="drift-validation">The PRs separate diagnosis from correction.</h2></div>
-        <div class="case-section__body">
-          <p>At the cited revisions, the PR record reports source-contract checks, exact-project deployment verification, deployment-URL checks, and custom-domain checks. The result is historical evidence for that repair sequence, not a promise of perpetual availability.</p>
-          <p><strong>Before:</strong> deployed-page drift could remain silent. <strong>After:</strong> source and live-domain contracts were both explicit.</p>
+      <section class="verification-strip" aria-labelledby="drift-validation">
+        <div class="verification-strip__evidence">
+          <p class="eyebrow">How it was checked</p>
+          <h2 id="drift-validation">Historical PR-reported validation</h2>
+          <p>The cited revision history reports source-contract checks, exact-project deployment verification, deployment-URL checks, and cache-busted custom-domain checks with stale-copy rejection.</p>
         </div>
-      </section>
-
-      <section class="case-section" aria-labelledby="drift-rollback">
-        <div><p class="eyebrow">04 / Rollback</p><h2 id="drift-rollback">Return to a known-good revision as one unit.</h2></div>
-        <div class="case-section__body">
-          <p>Rollback means reverting the workflow or configuration change and redeploying the prior known-good frontend revision. Source and hosting configuration must remain aligned.</p>
-        </div>
-      </section>
-
-      <section class="case-section" aria-labelledby="drift-sources">
-        <div><p class="eyebrow">05 / Sources</p><h2 id="drift-sources">Exact merged change record.</h2></div>
-        <div class="case-section__body">
-          <p>
-            <a href="https://github.com/Niyam-Paneru/dentsignal/pull/228">PR 228</a> / <code>5b2b197</code>,
-            <a href="https://github.com/Niyam-Paneru/dentsignal/pull/231">PR 231</a> / <code>ba03dd4</code>,
-            <a href="https://github.com/Niyam-Paneru/dentsignal/pull/232">PR 232</a> / <code>11ad47a</code>, and
-            <a href="https://github.com/Niyam-Paneru/dentsignal/pull/234">PR 234</a> / <code>9662eb1</code>.
-          </p>
+        <aside class="proof-boundary" aria-label="Claim boundary">
+          <p class="eyebrow">What this does not prove</p>
           <p><strong>This is engineering proof, not customer proof.</strong> DentSignal is not client work. This evidence does not establish continuous availability, present deployment state, or a guarantee against future drift.</p>
-          <a href="index.html#work">Back to all work</a>
-        </div>
+        </aside>
       </section>
+
+      <nav class="case-return" aria-label="Case study navigation">
+        <a href="index.html#repair-collection">← Back to the repair archive</a>
+        <a href="mailto:niyampaneru79@gmail.com?subject=Deployment%20repair%20request">Send a similar failure →</a>
+      </nav>
     </main>
 
     <footer class="site-footer"><p>Need deployment drift made visible?</p><a href="mailto:niyampaneru79@gmail.com?subject=Deployment%20repair%20request">Send the failure</a></footer>

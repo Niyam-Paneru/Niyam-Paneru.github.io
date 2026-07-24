@@ -139,11 +139,11 @@ export function checkSite(root = scriptRoot) {
     const githubLinks = [
       ...content.matchAll(/href="(https?:\/\/(?:www\.)?github\.com\/[^"]+)"/gi),
     ].map((match) => match[1]);
-    const unsupportedGithubLinks = githubLinks.filter(
-      (href) => !/^https:\/\/github\.com\/Niyam-Paneru\/dentsignal\/pull\/\d+$/.test(href),
-    );
-    if (unsupportedGithubLinks.length) {
-      fail(`${rel}: public GitHub links are not allowed outside cited DentSignal pull requests`);
+    if (githubLinks.length) {
+      fail(`${rel}: public GitHub links are not allowed`);
+    }
+    if (/(?:\bpull\/\d+|\bPR\s*#?\d+\b|<code>[0-9a-f]{7,40}<\/code>)/i.test(content)) {
+      fail(`${rel}: public repository evidence identifiers are not allowed`);
     }
     if (content.includes("SECOND_USERNAME")) fail(`${rel}: unresolved username token`);
     if (/trusted by|\$\s?\d+(?:\.\d+)?[kmb]?\s+(?:arr|mrr|revenue)|\b\d+\+?\s+(?:paying )?(?:customers|clinics)\b/i.test(content)) {
